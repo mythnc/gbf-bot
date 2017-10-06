@@ -3,8 +3,8 @@ import random
 import time
 from PIL import Image
 import pyautogui
+from . import image_path
 
-IMG_PATH = 'image/'
 pyautogui.PAUSE = 1.5
 DURATION = 0.15
 hikari_challenge = (1822, 672)
@@ -77,7 +77,7 @@ def activate():
 
 def get_click_point(point, image_name, could_be_negative=True):
     PARTITON = 4
-    image = Image.open(IMG_PATH + image_name)
+    image = Image.open(image_path + image_name)
 
     click_point = []
     for i in range(2):
