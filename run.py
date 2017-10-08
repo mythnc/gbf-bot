@@ -23,7 +23,7 @@ def log_gbf():
     fh = TimedRotatingFileHandler(os.path.join('log', 'gbf_bot.log'), 'D')
     fh.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s '\
-                                  '- %(message)s', '%H:%M:%S')
+                                  '- %(message)s')
     fh.setFormatter(formatter)
     logger.addHandler(ch)
     logger.addHandler(fh)
