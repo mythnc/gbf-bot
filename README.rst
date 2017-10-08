@@ -35,7 +35,7 @@ Angel Halo
 * Move game menu to Spcial - Daily first.
 * If Demensional Halo appears, you have to stop program manually.
 
-Trial Mission
+Trial Mission(experimental stage)
 -------------
 * Move game menu to Spcial - Daily first.
 * The position of Trial Mission is dynamic by days,
