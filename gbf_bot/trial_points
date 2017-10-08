@@ -1,6 +1,0 @@
-# point is the center of image
-# trial postion is different by day
-# make sure to check trial coordinate before using it
-
-trial = (1822, 553)
-trial_level = (1833, 470)

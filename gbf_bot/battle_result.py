@@ -2,14 +2,11 @@ import logging
 from os.path import join
 import time
 import pyautogui
+from . import battle_result_config as points
 from . import buttons, package_root
 from .components import Button
 
 logger = logging.getLogger(__name__)
-
-points = {}
-with open(join(package_root, 'battle_result_points')) as f:
-    exec(f.read(), points)
 
 result_ok = Button(buttons('ok1.png'), points['result_ok'])
 to_quest = Button(buttons('to_quest.png'), points['to_quest'])

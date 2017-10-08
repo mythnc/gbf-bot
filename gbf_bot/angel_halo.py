@@ -2,14 +2,11 @@ import logging
 from os.path import join
 import time
 import pyautogui
+from . import angel_halo_config as points
 from . import buttons, package_root, auto_battle, summon, battle_result
 from .components import Button
 
 logger = logging.getLogger(__name__)
-
-points = {}
-with open(join(package_root, 'angel_halo_points')) as f:
-    exec(f.read(), points)
 
 angel_halo = Button(buttons('select.png'), points['angel_halo'])
 angel_halo_level = Button(buttons('play.png'), points['angel_halo_level'])

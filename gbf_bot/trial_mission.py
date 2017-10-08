@@ -3,13 +3,10 @@ from os.path import join
 import time
 import pyautogui
 from . import buttons, package_root, auto_battle, summon, battle_result
+from . import trial_mission_config as points
 from .components import Button
 
 logger = logging.getLogger(__name__)
-
-points = {}
-with open(join(package_root, 'trial_points')) as f:
-    exec(f.read(), points)
 
 trial = Button(buttons('select.png'), points['trial'])
 trial_level = Button(buttons('play.png'), points['trial_level'])
