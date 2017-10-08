@@ -3,13 +3,13 @@ from os.path import join
 import time
 import pyautogui
 from . import buttons, package_root, auto_battle, summon, battle_result
-from . import trial_mission_config as points
+from . import trial_mission_config as config
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-trial = Button(buttons('select.png'), points['trial'])
-trial_level = Button(buttons('play.png'), points['trial_level'])
+trial = Button(buttons('select.png'), config['trial'])
+trial_level = Button(buttons('play.png'), config['trial_level'])
 
 
 def activate():
@@ -27,7 +27,7 @@ def activate():
     # chose summon
     summon.activate()
 
-    battle_time = 75
+    battle_time = int(config['battle_time'])
     auto_battle.activate(battle_time)
 
     battle_result.activate()

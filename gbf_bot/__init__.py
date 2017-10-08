@@ -20,6 +20,8 @@ for section in config.sections():
         item = config[section][key]
         if ',' in item:
             d[section][key] = tuple([int(x) for x in item.split(',')])
+        else:
+            d[section][key] = item
 logger.debug(d)
 
 angel_halo_config = d['angel halo']

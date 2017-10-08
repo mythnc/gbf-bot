@@ -2,14 +2,14 @@ import logging
 from os.path import join
 import time
 import pyautogui
-from . import angel_halo_config as points
+from . import angel_halo_config as config
 from . import buttons, package_root, auto_battle, summon, battle_result
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-angel_halo = Button(buttons('select.png'), points['angel_halo'])
-angel_halo_level = Button(buttons('play.png'), points['angel_halo_level'])
+angel_halo = Button(buttons('select.png'), config['angel_halo'])
+angel_halo_level = Button(buttons('play.png'), config['angel_halo_level'])
 
 
 def activate():
@@ -32,7 +32,7 @@ def activate():
     # chose summon
     summon.activate()
 
-    battle_time = 37
+    battle_time = int(config['battle_time'])
     auto_battle.activate(battle_time)
 
     battle_result.activate()
