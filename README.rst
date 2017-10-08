@@ -19,17 +19,21 @@ Configuration
 =============
 Enter parameters in the ``gbf_bot/config.ini``.
 If you have the same environment as me,
-all you need to change is the ``battle time``.
+all you need to do is change the ``battle time``.
 
 You could use ``mouseNow.py`` to capture the coordinate of mouse.
 
 Usage
 =====
-Make sure you have enough AP, then execute ``run.py``
+Make sure you have enough AP, then execute ``run.py``.
+
+Warning: If captcha popup, you have to handle it manually,
+or you will be banned.
 
 Angel Halo
 ----------
 * Move game menu to Spcial - Daily first.
+* If Demensional Halo appears, you have to stop program manually.
 
 Trial Mission
 -------------

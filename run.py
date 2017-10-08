@@ -32,8 +32,8 @@ def log_gbf():
 def display_menu():
     try:
         print()
-        print('1) continue play trial mission')
-        print('2) continue play angel halo')
+        print('1) continually play trial mission')
+        print('2) continually play angel halo')
         print()
         print('press CTRL-C to leave')
         print('select option: ', end='')
