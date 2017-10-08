@@ -4,7 +4,6 @@ from PIL import Image
 import pyautogui
 
 logger = logging.getLogger(__name__)
-pyautogui.PAUSE = 1.5
 
 
 class Button:

@@ -1,14 +1,6 @@
 # point is the center of image
-
-# postion is different by day
+# trial postion is different by day
 # make sure to check trial coordinate before using it
+
 trial = (1822, 553)
 trial_level = (1833, 470)
-summon = (1672, 424)
-summon_ok = (1790, 693)
-attack = (1803, 435)
-auto = (1483, 465)
-result_ok = (1672, 630)
-to_quest = (1671, 488)
-friend_cancel = (1566, 613)
-explanation_ok = (1676, 591)
