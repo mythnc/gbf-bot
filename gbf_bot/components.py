@@ -35,3 +35,10 @@ class Button:
         self.calculate_click_point()
         pyautogui.doubleClick(*self.click_point, duration=duration)
         self.logger.info(str(self.click_point))
+
+    def move_to(self):
+        pyautogui.moveTo(*self.center_point)
+        self.logger.info(str(self.center_point))
+
+    def display_pause(self):
+        print(pyautogui.PAUSE)
