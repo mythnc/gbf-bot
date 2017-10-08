@@ -17,7 +17,7 @@ def activate():
     # scroll mouse to the button
     logger.info('scroll mouse to the bottom')
     angel_halo.move_to()
-    pyautogui.scroll(-20)
+    pyautogui.scroll(-30)
 
     # chose battle name
     # click twice for window choice
