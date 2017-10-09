@@ -5,6 +5,11 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.3.0 (2017-10-09)
+------------------
+* Add slime blasting script
+* Add more randomization
+
 0.2.1 (2017-10-09)
 ------------------
 * Randomize battle time
