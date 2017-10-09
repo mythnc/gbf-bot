@@ -32,8 +32,9 @@ def log_gbf():
 def display_menu():
     try:
         print()
-        print('1) continually play trial mission')
-        print('2) continually play angel halo')
+        print('1) continually play angel halo')
+        print('2) continually play slime blasting')
+        print('3) continually play trial mission')
         print()
         print('press CTRL-C to leave')
         print('select option: ', end='')
@@ -44,7 +45,7 @@ def display_menu():
 
 
 def activate(i):
-    d = {'1': trial_mission, '2': angel_halo}
+    d = {'1': angel_halo, '2': slime_blasting, '3': trial_mission}
 
     try:
         count = 1
@@ -60,7 +61,7 @@ def activate(i):
 
 if __name__ == '__main__':
     log_gbf()
-    from gbf_bot import trial_mission, angel_halo
+    from gbf_bot import trial_mission, angel_halo, slime_blasting
     root_logger.info('gbf robot is executing...')
     i = display_menu()
     activate(i)

@@ -35,6 +35,10 @@ Angel Halo
 * Move game menu to Spcial - Daily first.
 * If Demensional Halo appears, you have to stop program manually.
 
+Slime Blasting
+--------------
+* Set everything ready before blasting.
+
 Trial Mission(experimental stage)
 -------------
 * Move game menu to Spcial - Daily first.
