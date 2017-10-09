@@ -21,7 +21,7 @@ Enter parameters in the ``gbf_bot/config.ini``.
 If you have the same environment as me,
 all you need to do is change the ``battle time``.
 
-You could use ``mouseNow.py`` to capture the coordinate of mouse.
+You could use ``mouse_now.py`` to capture the coordinate of mouse.
 
 Usage
 =====
