@@ -4,11 +4,11 @@ import os
 import sys
 import pyautogui
 
-root_logger = logging.getLogger(__name__)
+root_logger = logging.getLogger('root')
 root_logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
-formatter = logging.Formatter('root:%(levelname)s:%(message)s')
+formatter = logging.Formatter('%(name)s:%(levelname)s:%(message)s')
 ch.setFormatter(formatter)
 root_logger.addHandler(ch)
 

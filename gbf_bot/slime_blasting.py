@@ -30,7 +30,7 @@ def activate():
     logger.info('click skill')
     skill.click()
     time.sleep(random.random() * 0.25)
-    logging.info('click back')
+    logger.info('click back')
     back.click()
     time.sleep(random.random() * 0.25)
 

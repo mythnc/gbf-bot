@@ -12,7 +12,7 @@ class Button:
         self.center_point = point
         self.click_point = [None] * 2
         self.signed = signed
-        self.logger = logging.getLogger('gbf_bot.components.Button')
+        self.logger = logging.getLogger(__name__ + '.' + Button.__name__)
 
     def calculate_click_point(self, partition=4):
         for i in range(2):
