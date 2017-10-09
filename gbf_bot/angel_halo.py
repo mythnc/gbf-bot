@@ -1,5 +1,6 @@
 import logging
 from os.path import join
+import random
 import time
 import pyautogui
 from . import angel_halo_config as config
@@ -23,8 +24,10 @@ def activate():
     # click twice for window choice
     logger.info('click angel halo')
     angel_halo.double_click()
+    time.sleep(random.random() * 0.25)
     logger.info('click angel halo level')
     angel_halo_level.click()
+    time.sleep(random.random() * 0.25)
 
     # AP will be checked before next step
     # make sure AP is enough

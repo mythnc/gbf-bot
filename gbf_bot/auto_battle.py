@@ -15,9 +15,10 @@ auto = Button(buttons('auto.png'), points['auto'])
 
 def activate(battle_time):
     pyautogui.PAUSE = 1.3
-    time.sleep(5)
+    time.sleep(5 + random.random() * 0.25)
     logger.info('click attack')
     attack.double_click()
+    time.sleep(random.random() * 0.35)
     logger.info('click auto')
     auto.click()
 

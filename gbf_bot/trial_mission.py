@@ -1,5 +1,6 @@
 import logging
 from os.path import join
+import random
 import time
 import pyautogui
 from . import buttons, package_root, auto_battle, summon, battle_result
@@ -18,8 +19,10 @@ def activate():
     # click twice for window choice
     logger.info('click trial')
     trial.double_click()
+    time.sleep(random.random() * 0.25)
     logger.info('click trial_level')
     trial_level.click()
+    time.sleep(random.random() * 0.25)
 
     # AP will be checked before next step
     # make sure AP is enough

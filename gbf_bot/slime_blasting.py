@@ -25,15 +25,18 @@ def activate():
     # AP will be checked before next step
     # make sure AP is enough
 
-    time.sleep(5 + random.random())
+    time.sleep(5 + random.random() * 0.25)
     logger.info('click character')
     character1.double_click()
     logger.info('click skill')
     skill.click()
+    time.sleep(random.random() * 0.25)
     logging.info('click back')
     back.click()
+    time.sleep(random.random() * 0.25)
 
     # battle result 
     logger.info('click back')
-    back.click()
+    back.click(0)
+    time.sleep(random.random() * 0.25)
     logger.info('slime blasting end')

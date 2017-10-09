@@ -1,5 +1,6 @@
 import logging
 from os.path import join
+import random
 import time
 import pyautogui
 from . import buttons, package_root
@@ -17,5 +18,6 @@ def activate():
     time.sleep(1)
     logger.info('click summon')
     summon.click()
+    time.sleep(random.random() * 0.25)
     logger.info('click ok')
     summon_ok.click()
