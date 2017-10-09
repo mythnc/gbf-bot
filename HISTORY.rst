@@ -5,6 +5,10 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.2.1 (2017-10-09)
+------------------
+* Randomize battle time
+
 0.2.0 (2017-10-08)
 ------------------
 * Adjust package structure 
