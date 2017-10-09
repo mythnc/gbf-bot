@@ -22,7 +22,8 @@ class Button:
             random_x = random.randint(0, self.image.size[i] // partition) * d
             self.click_point[i] = self.center_point[i] + random_x
 
-    def move_direction(self):
+    @staticmethod
+    def move_direction():
         d = {0: -1, 1: 1}
         return d[random.randint(0, 1)]
 
@@ -40,5 +41,6 @@ class Button:
         pyautogui.moveTo(*self.center_point)
         self.logger.info(str(self.center_point))
 
-    def display_pause(self):
+    @staticmethod
+    def display_pause():
         print(pyautogui.PAUSE)

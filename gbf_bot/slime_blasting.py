@@ -1,5 +1,4 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
@@ -35,7 +34,7 @@ def activate():
     back.click()
     time.sleep(random.random() * 0.25)
 
-    # battle result 
+    # battle result
     logger.info('click back')
     back.click(0)
     time.sleep(random.random() * 0.25)

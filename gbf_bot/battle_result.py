@@ -1,17 +1,16 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
-from . import battle_result_config as points
-from . import buttons, package_root
+from . import battle_result_config as config
+from . import buttons
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-result_ok = Button(buttons('ok1.png'), points['result_ok'])
-to_quest = Button(buttons('to_quest.png'), points['to_quest'])
-friend_cancel = Button(buttons('cancel.png'), points['friend_cancel'], False)
+result_ok = Button(buttons('ok1.png'), config['result_ok'])
+to_quest = Button(buttons('to_quest.png'), config['to_quest'])
+friend_cancel = Button(buttons('cancel.png'), config['friend_cancel'], False)
 
 def activate():
     pyautogui.PAUSE = 0.1

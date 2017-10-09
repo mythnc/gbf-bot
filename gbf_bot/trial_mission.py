@@ -1,9 +1,8 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
-from . import buttons, package_root, auto_battle, summon, battle_result
+from . import buttons, auto_battle, summon, battle_result
 from . import trial_mission_config as config
 from .components import Button
 

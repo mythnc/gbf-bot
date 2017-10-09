@@ -1,16 +1,15 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
-from . import auto_battle_config as points
-from . import buttons, package_root, battle_result_config
+from . import auto_battle_config as config
+from . import buttons
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-attack = Button(buttons('attack.png'), points['attack'])
-auto = Button(buttons('auto.png'), points['auto'])
+attack = Button(buttons('attack.png'), config['attack'])
+auto = Button(buttons('auto.png'), config['auto'])
 
 
 def activate(battle_time):

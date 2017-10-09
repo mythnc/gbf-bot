@@ -1,10 +1,9 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
 from . import angel_halo_config as config
-from . import buttons, package_root, auto_battle, summon, battle_result
+from . import buttons, auto_battle, summon, battle_result
 from .components import Button
 
 logger = logging.getLogger(__name__)

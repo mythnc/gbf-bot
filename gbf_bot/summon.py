@@ -1,16 +1,15 @@
 import logging
-from os.path import join
 import random
 import time
 import pyautogui
-from . import buttons, package_root
-from . import summon_config as points
+from . import buttons
+from . import summon_config as config
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-summon = Button(buttons('summon.png'), points['summon'])
-summon_ok = Button(buttons('ok2.png'), points['summon_ok'])
+summon = Button(buttons('summon.png'), config['summon'])
+summon_ok = Button(buttons('ok2.png'), config['summon_ok'])
 
 
 def activate():
