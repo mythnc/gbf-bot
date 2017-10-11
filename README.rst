@@ -1,9 +1,15 @@
-For acdemic research use.
-Use it at your own risk.
+GBF Bot
+~~~~~~~
+It's kind of lazy to do the same thing again and again.
+It's not interesting and boring.
+Why not let the computer to do these things for us?
+That's how this robot being born.
 
-Prerequisite
+For acdemic research use.  Use it at your own risk.
+
+Prerequisite (development environment)
 ============
-* Python 3.5.2
+* Python 3.6.3
 * PyAutoGUI 0.9.36
 
 Mac users have to install ``pyobjc-core`` and ``pyobjc`` additionally.
@@ -30,17 +36,11 @@ Make sure you have enough AP, then execute ``run.py``.
 Warning: If captcha popup, you have to handle it manually,
 or you will be banned.
 
-Angel Halo
+Favorites Mission
 ----------
-* Move game menu to Spcial - Daily first.
-* If Demensional Halo appears, you have to stop program manually.
+* Just put the mission you want to auto-play in the top of favorites.
 
 Slime Blasting
 --------------
 * Set everything ready before blasting.
 
-Trial Mission(experimental stage)
--------------
-* Move game menu to Spcial - Daily first.
-* The position of Trial Mission is dynamic by days,
-  make sure the position in ``gbf_bot/config.ini`` is accurate.
