@@ -24,9 +24,8 @@ for section in config.sections():
             d[section][key] = item
 logger.debug(d)
 
-angel_halo_config = d['angel halo']
 auto_battle_config = d['auto battle']
 battle_result_config = d['battle result']
+favorites_mission_config = d['favorites mission']
 slime_blasting_config = d['slime blasting']
 summon_config = d['summon']
-trial_mission_config = d['trial mission']

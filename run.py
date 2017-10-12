@@ -6,11 +6,11 @@ import pyautogui
 
 root_logger = logging.getLogger('root')
 root_logger.setLevel(logging.INFO)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(message)s')
-ch.setFormatter(formatter)
-root_logger.addHandler(ch)
+root_ch = logging.StreamHandler()
+root_ch.setLevel(logging.INFO)
+root_formatter = logging.Formatter('%(name)s:%(levelname)s:%(message)s')
+root_ch.setFormatter(root_formatter)
+root_logger.addHandler(root_ch)
 
 
 def log_gbf():
@@ -32,9 +32,8 @@ def log_gbf():
 def display_menu():
     try:
         print()
-        print('1) continually play angel halo')
+        print('1) continually play favorites top mission')
         print('2) continually play slime blasting')
-        print('3) continually play trial mission')
         print()
         print('press CTRL-C to leave')
         print('select option: ', end='')
@@ -45,9 +44,8 @@ def display_menu():
 
 
 def activate(i):
-    angel_halo = AngelHalo()
-    trial_mission = TrialMission()
-    d = {'1': angel_halo, '2': slime_blasting, '3': trial_mission}
+    favorite_mission = FavoritesBattle()
+    d = {'1': favorite_mission, '2': slime_blasting}
 
     try:
         count = 1
@@ -63,8 +61,8 @@ def activate(i):
 
 if __name__ == '__main__':
     log_gbf()
-    from gbf_bot.special_battle import AngelHalo, TrialMission
+    from gbf_bot.special_battle import FavoritesBattle
     from gbf_bot import slime_blasting
     root_logger.info('gbf robot is executing...')
-    i = display_menu()
-    activate(i)
+    option = display_menu()
+    activate(option)
