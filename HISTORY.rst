@@ -5,6 +5,11 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.4.0 (2017-10-13)
+------------------
+* Adjust slime blasting script
+* Instead of special battles script, using favorites battle
+
 0.3.0 (2017-10-09)
 ------------------
 * Add slime blasting script
