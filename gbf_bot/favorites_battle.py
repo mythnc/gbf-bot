@@ -12,9 +12,11 @@ logger = logging.getLogger(__name__)
 class FavoritesBattle():
     def __init__(self):
         self.cell = Button(buttons('favorites_cell.png'),
-                           config['cell'])
+                           config['cell'],
+                           False)
         self.battle_time = int(config['battle time'])
-        self.logger = logging.getLogger(__name__ + '.' + FavoritesBattle.__name__)
+        self.logger = logging.getLogger(__name__ + '.' 
+                                        + FavoritesBattle.__name__)
 
     def click_cell(self):
         self.cell.double_click()

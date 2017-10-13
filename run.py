@@ -61,7 +61,7 @@ def activate(i):
 
 if __name__ == '__main__':
     log_gbf()
-    from gbf_bot.special_battle import FavoritesBattle
+    from gbf_bot.favorites_battle import FavoritesBattle
     from gbf_bot import slime_blasting
     root_logger.info('gbf robot is executing...')
     option = display_menu()
