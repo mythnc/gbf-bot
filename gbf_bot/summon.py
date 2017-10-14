@@ -3,7 +3,6 @@ from os.path import join
 import random
 import time
 import pyautogui
-from . import buttons
 from . import images_dir, top_left, window_size
 from . import summon_config as config
 from . import utility
@@ -23,7 +22,7 @@ class SummonSelector:
     cell_interval = 129
     # from image center to cell center
     image_to_cell = (160, -13)
-    dialog_ok = Button(buttons('ok2.png'), config['dialog ok'])
+    dialog_ok = Button('ok2.png', config['dialog ok'])
     first_summon_pt = config['first summon cell']
     logger = logging.getLogger(__name__ + '.' + 'SummonSelector')
 
@@ -31,7 +30,7 @@ class SummonSelector:
         self.names = names
         self.logger = logging.getLogger(__name__ + '.' + SummonSelector.__name__)
         # default summon is the top 1
-        self.summon = Button(buttons('summon_cell.png'),
+        self.summon = Button('summon_cell.png',
                              SummonSelector.first_summon_pt)
 
     @staticmethod

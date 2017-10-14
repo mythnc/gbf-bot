@@ -3,15 +3,14 @@ import random
 import time
 import pyautogui
 from . import slime_blasting_config as config
-from . import buttons
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-start = Button(buttons('start.png'), config['start'])
-character1 = Button(buttons('character.png'), config['character1'])
-skill = Button(buttons('skill.png'), config['skill'])
-back = Button(buttons('back.png'), config['back'])
+start = Button('start.png', config['start'])
+character1 = Button('character.png', config['character1'])
+skill = Button('skill.png', config['skill'])
+back = Button('back.png', config['back'])
 
 
 def activate():

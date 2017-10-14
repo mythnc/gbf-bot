@@ -1,15 +1,17 @@
 import logging
+from os.path import join
 import random
 from PIL import Image
 import pyautogui
+from . import images_dir
 
 logger = logging.getLogger(__name__)
 
 
 class Button:
-    def __init__(self, image_path, point, signed=True):
-        self.path = image_path
-        self.image = Image.open(image_path)
+    def __init__(self, name, point, signed=True):
+        self.path = join(images_dir, 'buttons', name)
+        self.image = Image.open(self.path)
         self.center_point = point
         self.click_point = [None] * 2
         self.signed = signed

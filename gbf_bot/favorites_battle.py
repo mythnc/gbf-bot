@@ -3,7 +3,7 @@ import random
 import time
 import pyautogui
 from . import favorites_mission_config as config
-from . import buttons, auto_battle, battle_result
+from . import auto_battle, battle_result
 from .summon import SummonSelector
 from .components import Button
 
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class FavoritesBattle():
     def __init__(self):
-        self.cell = Button(buttons('favorites_cell.png'),
+        self.cell = Button('favorites_cell.png',
                            config['cell'],
                            False)
         self.battle_time = int(config['battle time'])

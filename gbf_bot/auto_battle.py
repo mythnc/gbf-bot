@@ -3,13 +3,12 @@ import random
 import time
 import pyautogui
 from . import auto_battle_config as config
-from . import buttons
 from .components import Button
 
 logger = logging.getLogger(__name__)
 
-attack = Button(buttons('attack.png'), config['attack'])
-auto = Button(buttons('auto.png'), config['auto'])
+attack = Button('attack.png', config['attack'])
+auto = Button('auto.png', config['auto'])
 
 
 def activate(battle_time):

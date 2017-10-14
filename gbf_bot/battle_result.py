@@ -3,7 +3,6 @@ import random
 import time
 import pyautogui
 from . import battle_result_config as config
-from . import buttons
 from .components import Button
 
 logger = logging.getLogger(__name__)
