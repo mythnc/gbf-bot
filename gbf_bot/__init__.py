@@ -19,7 +19,13 @@ for section in config.sections():
     for key in config[section].keys():
         item = config[section][key]
         if ',' in item:
-            d[section][key] = tuple([int(x) for x in item.split(',')])
+            seq = []
+            for x in item.split(','):
+                if x.isdigit():
+                    seq.append(int(x))
+                else:
+                    seq.append(x)
+            d[section][key] = tuple(seq)
         else:
             d[section][key] = item
 logger.debug(d)

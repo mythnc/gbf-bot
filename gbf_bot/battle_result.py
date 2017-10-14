@@ -8,9 +8,10 @@ from .components import Button
 
 logger = logging.getLogger(__name__)
 
-result_ok = Button(buttons('ok1.png'), config['result_ok'])
-to_quest = Button(buttons('to_quest.png'), config['to_quest'])
-friend_cancel = Button(buttons('cancel.png'), config['friend_cancel'], False)
+result_ok = Button('ok1.png', config['result ok'])
+to_quest = Button('to_quest.png', config['to quest'])
+friend_cancel = Button('cancel.png', config['friend cancel'], False)
+
 
 def activate():
     pyautogui.PAUSE = 0.1
