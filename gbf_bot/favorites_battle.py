@@ -3,7 +3,8 @@ import random
 import time
 import pyautogui
 from . import favorites_mission_config as config
-from . import buttons, auto_battle, summon, battle_result
+from . import buttons, auto_battle, battle_result
+from .summon import SummonSelector
 from .components import Button
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,9 @@ class FavoritesBattle():
                            config['cell'],
                            False)
         self.battle_time = int(config['battle time'])
-        self.logger = logging.getLogger(__name__ + '.' 
+        self.logger = logging.getLogger(__name__ + '.'
                                         + FavoritesBattle.__name__)
+        self.summon = SummonSelector(config['summon name'])
 
     def click_cell(self):
         self.cell.double_click()
@@ -32,7 +34,7 @@ class FavoritesBattle():
         # make sure AP is enough
 
         # chose summon
-        summon.activate()
+        self.summon.activate()
 
         auto_battle.activate(self.battle_time)
 

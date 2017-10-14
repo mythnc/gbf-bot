@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 class Button:
     def __init__(self, image_path, point, signed=True):
+        self.path = image_path
         self.image = Image.open(image_path)
         self.center_point = point
         self.click_point = [None] * 2

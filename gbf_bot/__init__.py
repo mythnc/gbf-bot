@@ -24,6 +24,9 @@ for section in config.sections():
             d[section][key] = item
 logger.debug(d)
 
+top_left = d['global']['top left']
+window_size = d['global']['window size']
+
 auto_battle_config = d['auto battle']
 battle_result_config = d['battle result']
 favorites_mission_config = d['favorites mission']
