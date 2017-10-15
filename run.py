@@ -1,5 +1,5 @@
+from datetime import datetime
 import logging
-from logging.handlers import TimedRotatingFileHandler
 import os
 import sys
 import pyautogui
@@ -18,9 +18,12 @@ def log_gbf():
     logger.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
-    if not os.path.exists('log'):
-        os.makedirs('log')
-    fh = TimedRotatingFileHandler(os.path.join('log', 'gbf_bot.log'), 'D')
+    log_dir = 'log'
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    today = datetime.now()
+    file_name = '{}.log'.format(str(today).split(' ')[0])
+    fh = logging.FileHandler(os.path.join(log_dir, file_name))
     fh.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s '\
                                   '- %(message)s')
