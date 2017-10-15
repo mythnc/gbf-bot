@@ -27,6 +27,7 @@ def activate(battle_time):
         if found is not None:
             break
 
+    pyautogui.PAUSE = 1.3
     logger.info('click attack')
     attack.double_click()
     time.sleep(random.random() * 0.35)
