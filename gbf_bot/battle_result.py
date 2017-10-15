@@ -1,9 +1,10 @@
 import logging
+from os.path import join
 import random
 import sys
 import time
 import pyautogui
-from . import top_left, window_size
+from . import top_left, window_size, images_dir
 from . import battle_result_config as config
 from . import utility
 from .components import Button
@@ -33,8 +34,7 @@ def activate():
     result_ok.double_click()
     time.sleep(0.8 + random.random() * 0.25)
 
-    # if De La Fille (Earth) in the party
-    # there is chance casino chips dialog will be popped up
+    chips_dialog()
 
     # wait before next step
     region = (x, y+h//2) + (w, h//15)
@@ -63,6 +63,22 @@ def activate():
         time.sleep(0.75 + random.random() * 0.35)
 
     halo_dialog()
+
+def chips_dialog():
+    # if De La Fille (Earth) in the party
+    # there is chance casino chips dialog will be popped up
+    if config['get chips'] == 'no':
+        return
+
+    chips_ok = Button('ok1.png', config['chips ok'])
+    w, h = window_size
+    x, y = top_left
+    region = (x, y+h*2//5) + (w//2, h//5)
+    medal = join(images_dir, 'medal.png')
+    found = utility.locate(medal, region)
+    if found is not None:
+        logger.info('chip dialog found')
+        chips_ok.click()
 
 def halo_dialog():
     # dimension halo if any
