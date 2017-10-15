@@ -1,5 +1,6 @@
 import logging
 import random
+import sys
 import time
 import pyautogui
 from . import top_left, window_size
@@ -12,7 +13,6 @@ logger = logging.getLogger(__name__)
 result_ok = Button('ok1.png', config['result ok'])
 to_quest = Button('to_quest.png', config['to quest'])
 friend_cancel = Button('cancel.png', config['friend cancel'])
-
 
 
 def activate():
@@ -62,4 +62,20 @@ def activate():
         friend_cancel.click()
         time.sleep(0.75 + random.random() * 0.35)
 
+    halo_dialog()
+
+def halo_dialog():
     # dimension halo if any
+    # do not handle it, leave it to user
+    if config['dimension halo'] == 'no':
+        return
+
+    dimension_close = Button('close.png', config['dimension close'])
+    w, h = window_size
+    x, y = top_left
+    region = (x, y+h*2//3) + (w, h//7)
+    found = utility.locate(dimension_close.path, region)
+    if found is not None:
+        logger.info('dimension dialog found')
+        logger.info('gbf robt finished')
+        sys.exit(0)
