@@ -2,8 +2,10 @@ import logging
 import random
 import time
 import pyautogui
+from . import top_left, window_size
 from . import favorites_mission_config as config
 from . import auto_battle, battle_result
+from . import utility
 from .summon import SummonSelector
 from .components import Button
 
@@ -12,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class FavoritesBattle():
     def __init__(self):
+        self.favorites = Button('favorites.png', config['favorites'])
         self.cell = Button('favorites_cell.png',
                            config['cell'],
                            False)
@@ -26,6 +29,17 @@ class FavoritesBattle():
 
     def activate(self):
         pyautogui.PAUSE = 1.5
+
+        # wait before enter favorites menu
+        w, h = window_size
+        x, y = top_left
+        region = (x, y+h//3) + (w, h//7)
+        logger.debug('wait before enter favorites menu')
+        while True:
+            time.sleep(0.5)
+            found = utility.locate(self.favorites.path, region, confidence=0.8)
+            if found is not None:
+                break
 
         self.logger.info('click mission')
         self.click_cell()
