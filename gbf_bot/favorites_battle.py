@@ -15,7 +15,7 @@ class FavoritesBattle():
         self.cell = Button('favorites_cell.png',
                            config['cell'],
                            False)
-        self.battle_time = int(config['battle time'])
+        self.battle_time = config['battle time']
         self.logger = logging.getLogger(__name__ + '.'
                                         + FavoritesBattle.__name__)
         self.summon = SummonSelector(config['summon name'])

@@ -25,6 +25,8 @@ for section in config.sections():
                 else:
                     seq.append(x)
             d[section][key] = tuple(seq)
+        elif item.isdigit():
+            d[section][key] = int(item)
         else:
             d[section][key] = item
 logger.debug(d)
