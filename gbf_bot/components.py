@@ -30,16 +30,16 @@ class Button:
         d = {0: -1, 1: 1}
         return d[random.randint(0, 1)]
 
-    def click(self, duration=0.15, click_point=None, click=pyautogui.click):
+    def click(self, duration=0.15, click_point=None, behavior=pyautogui.click):
         if click_point is None:
             self.calculate_click_point()
         else:
             self.click_point = click_point
-        click(*self.click_point, duration=duration)
+        behavior(*self.click_point, duration=duration)
         self.logger.info(str(self.click_point))
         return self.click_point
 
-    def double_click(self, duration=0.15, click_point=None):
+    def double_click(self, duration=0.0, click_point=None):
         return self.click(duration, click_point, pyautogui.doubleClick)
 
     def move_to(self):
