@@ -2,7 +2,6 @@ import logging
 import random
 import time
 import pyautogui
-from . import top_left, window_size
 from . import favorites_mission_config as config
 from . import auto_battle, battle_result
 from . import utility
@@ -31,13 +30,11 @@ class FavoritesBattle():
         pyautogui.PAUSE = 1.5
 
         # wait before enter favorites menu
-        w, h = window_size
-        x, y = top_left
-        region = (x, y+h//3) + (w, h//7)
         logger.debug('wait before enter favorites menu')
         while True:
             time.sleep(0.5)
-            found = utility.locate(self.favorites.path, region, confidence=0.8)
+            found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,
+                                   confidence=0.8)
             if found is not None:
                 break
 

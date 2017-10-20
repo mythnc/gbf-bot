@@ -3,7 +3,7 @@ from os.path import join
 import random
 import time
 import pyautogui
-from . import images_dir, top_left, window_size
+from . import images_dir
 from . import summon_config as config
 from . import utility
 from .components import Button
@@ -49,10 +49,8 @@ class SummonSelector:
     @staticmethod
     def find(name):
         image = summon_mapping[name]
-        w, h = window_size
-        region = top_left + (w//3, h)
         for _ in range(3):
-            point = utility.locate_center(image, region)
+            point = utility.locate_center(image, 0, 0, 1/3, 1)
             if point is not None:
                 SummonSelector.logger.info(name + ' found')
                 return [p + move for p, move in zip(point, SummonSelector.image_to_cell)]
@@ -66,12 +64,10 @@ class SummonSelector:
 
     def activate(self):
         # wait before summon page is ready
-        w, h = window_size
-        region = top_left + (w, h//3)
         while True:
             time.sleep(0.5)
             image = summon_mapping['hint']
-            hint = utility.locate(image, region)
+            hint = utility.locate(image, 0, 0, 1, 1/3)
             if hint is not None:
                 self.logger.info('enter summon page')
                 break
@@ -100,12 +96,10 @@ class SummonSelector:
         time.sleep(random.random() * 0.25)
 
         # wait before confirm dialog popup
-        w, h = window_size
-        start_pt = (top_left[0], top_left[1] + h*2//3)
-        region = start_pt + (w, h//3)
         while True:
             time.sleep(0.5)
-            dialog = utility.locate(SummonSelector.dialog_ok.path, region)
+            dialog = utility.locate(SummonSelector.dialog_ok.path,
+                                    1/2, 2/3, 1/2, 1/3)
             if dialog is not None:
                 self.logger.info('dialog popped up')
                 break

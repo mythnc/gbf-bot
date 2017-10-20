@@ -4,7 +4,7 @@ import random
 import sys
 import time
 import pyautogui
-from . import top_left, window_size, images_dir
+from . import images_dir
 from . import battle_result_config as config
 from . import utility
 from .components import Button
@@ -20,13 +20,10 @@ def activate():
     pyautogui.PAUSE = 1
 
     # wait before battle end
-    w, h = window_size
-    x, y = top_left
-    region = (x, y+h//2) + (w, h//4)
     logger.debug('wait before battle end')
     while True:
         time.sleep(0.5)
-        found = utility.locate(result_ok.path, region)
+        found = utility.locate(result_ok.path, 0, 1/2, 1, 1/4)
         if found is not None:
             break
 
@@ -37,7 +34,6 @@ def activate():
     chips_dialog()
 
     # wait before next step
-    region = (x, y+h//2) + (w, h//15)
     count = 0
     logger.debug('wait before next step')
     while True:
@@ -45,7 +41,7 @@ def activate():
         if count % 10 == 0:
             pyautogui.click()
         time.sleep(0.5)
-        found = utility.locate(to_quest.path, region)
+        found = utility.locate(to_quest.path, 0, 1/2, 1, 1/15)
         if found is not None:
             break
         count += 1
@@ -55,8 +51,7 @@ def activate():
     time.sleep(0.8)
 
     # friend request cancel if any
-    region = (x, y+h*3//5) + (w, h//9)
-    found = utility.locate(friend_cancel.path, region)
+    found = utility.locate(friend_cancel.path, 0, 3/5, 1, 1/9)
     if found is not None:
         logger.info('click friend request cancel')
         friend_cancel.click()
@@ -71,11 +66,8 @@ def chips_dialog():
         return
 
     chips_ok = Button('ok1.png', config['chips ok'])
-    w, h = window_size
-    x, y = top_left
-    region = (x, y+h*2//5) + (w//2, h//5)
     medal = join(images_dir, 'medal.png')
-    found = utility.locate(medal, region)
+    found = utility.locate(medal, 0, 2/5, 1/2, 1/5)
     if found is not None:
         logger.info('chip dialog found')
         chips_ok.click()
@@ -87,10 +79,7 @@ def halo_dialog():
         return
 
     dimension_close = Button('close.png', config['dimension close'])
-    w, h = window_size
-    x, y = top_left
-    region = (x, y+h*2//3) + (w, h//7)
-    found = utility.locate(dimension_close.path, region)
+    found = utility.locate(dimension_close.path, 0, 2/3, 1, 1/7)
     if found is not None:
         logger.info('dimension dialog found')
         logger.info('gbf robt finished')
