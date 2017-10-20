@@ -5,6 +5,14 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.5.0 (2017-10-20)
+------------------
+Optimize battle flow dramatically by using OpenCV
+
+* Summon could be selected automatically
+* Casion chips dialog is handled automatically
+* Friend request will be canceled automatically
+
 0.4.0 (2017-10-13)
 ------------------
 * Adjust slime blasting script
