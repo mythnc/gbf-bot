@@ -1,4 +1,6 @@
 run:
 	python run.py
-lint:
+lint: test
 	pylint gbf_bot	
+test:
+	pytest -v
