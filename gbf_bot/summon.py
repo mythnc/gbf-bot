@@ -17,6 +17,11 @@ summon_mapping = {
     'leviathan omega': join(summon_dir, 'leviathan_omega.png'),
     'europa': join(summon_dir, 'europa.png'),
     'macula marius': join(summon_dir, 'macula_marius.png'),
+    # earth
+    'baal': join(summon_dir, 'baal.png'),
+    'medusa': join(summon_dir, 'medusa.png'),
+    'godsworn alexiel': join(summon_dir, 'godsworn_alexiel.png'),
+    'tezcatlipoca': join(summon_dir, 'tezcatlipoca.png'),
     # light
     'apollo': join(summon_dir, 'apollo.png'),
     'lucifer': join(summon_dir, 'lucifer.png'),

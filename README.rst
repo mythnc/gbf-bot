@@ -39,15 +39,19 @@ Summon Support List
 These are currently supported summon list:
 
 * apollo
+* baal
 * bahamut
 * celeste omega
 * dark angel olivia
 * europa
+* godsworn alexiel
 * kaguya
 * leviathan omega
 * lucifer
 * macula marius
+* medusa
 * odin
+* tezcatlipoca
 * white rabbit
 
 Usage
