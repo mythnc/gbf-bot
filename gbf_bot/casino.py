@@ -1,3 +1,4 @@
+from fractions import Fraction
 import logging
 from os.path import join
 import random
@@ -12,7 +13,9 @@ from .components import Button
 logger = logging.getLogger(__name__)
 
 poker_dir = join(images_dir, 'poker')
+doubleup_dir = join(poker_dir, 'doubleup')
 
+card_match = "XX23456789TJQKA"
 numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['S', 'C', 'D', 'H']
 cards_name = [suit + number + '.png' for suit in suits for number in numbers]\
@@ -29,6 +32,7 @@ class PokerBot:
         self.ok = self.start
         self.yes = Button('poker_yes.png', config['yes'])
         self.no = Button('poker_no.png', config['no'])
+        self.play_time = config['play time']
         self.logger = logging.getLogger(__name__ + '.' + PokerBot.__name__)
 
     @staticmethod
@@ -74,9 +78,11 @@ class PokerBot:
         pyautogui.PAUSE = 1
 
         self.logger.info('poker bot start')
+        start_time = time.time()
+        current_time = time.time()
         time.sleep(1)
         self.start.double_click()
-        while True:
+        while current_time - start_time <= self.play_time:
             time.sleep(2)
             cards = PokerBot.detect_cards()
             self.logger.info(cards)
@@ -93,19 +99,108 @@ class PokerBot:
             if PokerBot.is_double_up():
                 self.logger.info('play double up')
                 self.yes.click()
-                sys.exit(0)
-            else:
-                self.logger.info('new game')
-                utility.click()
+                DoubleUpBot().activate()
+            self.logger.info('new game')
+            self.start.click()
+            current_time = time.time()
 
         self.logger.info('poker bot end')
+        sys.exit(0)
+
+
+class DoubleUpBot:
+    cards_name = [suit + number + '.png' for suit in suits for number in numbers]
+    logger = logging.getLogger(__name__ + '.DoubleUpBot')
+
+    def __init__(self):
+        self.low = Button('poker_yes.png', config['yes'])
+        self.high = Button('poker_no.png', config['no'])
+        self.logger = logging.getLogger(__name__ + '.' + DoubleUpBot.__name__)
+        self.yes = self.low
+
+    @staticmethod
+    def detect_card():
+        base_images = utility.screenshot(0, 1/4, 1, 1/4)
+        for card_name in DoubleUpBot.cards_name:
+            confidence = 0.95
+            if card_name[1] in ('J', 'Q', 'K'):
+                confidence = 0.94
+            found = pyautogui.locate(join(doubleup_dir, card_name), base_images,
+                                     confidence=confidence)
+            if found:
+                DoubleUpBot.logger.info(card_name.split('.')[0])
+                return card_name
+
+        # confidence has to be adjusted
+        DoubleUpBot.logger.warning('No card could be found')
+        return None
+
+    @staticmethod
+    def is_continue():
+        while True:
+            base_images = utility.screenshot(0, 1/5, 1, 1/12)
+            result = pyautogui.locate(join(doubleup_dir, 'continue.png'),
+                                      base_images, confidence=0.9)
+            if result is not None:
+                return True
+            result = pyautogui.locate(join(doubleup_dir, 'finished1.png'),
+                                      base_images, confidence=0.9)
+            if result is not None:
+                return False
+            result = pyautogui.locate(join(doubleup_dir, 'finished2.png'),
+                                      base_images, confidence=0.9)
+            if result is not None:
+                return False
+            time.sleep(0.5)
+
+    def activate(self):
+        time.sleep(1)
+        doubleup = DoubleUp()
+        for _ in range(10):
+            card = DoubleUpBot.detect_card()
+            result = doubleup.play(card[1])
+            if result == 'high':
+                self.high.click()
+            elif result == 'low':
+                self.low.click()
+            time.sleep(1.75 + 0.1 * random.random())
+            if DoubleUpBot.is_continue():
+                self.yes.click()
+                time.sleep(1.75 + 0.1 * random.random())
+            else:
+                return
+
+
+class DoubleUp:
+    def __init__(self):
+        self.numbers = list(range(2, 15)) * 4
+        self.logger = logging.getLogger(__name__ + '.' + DoubleUp.__name__)
+
+    def high_prob(self, number):
+        return Fraction(len([n for n in self.numbers if n > number]), len(self.numbers))
+
+    def low_prob(self, number):
+        return Fraction(len([n for n in self.numbers if n < number]), len(self.numbers))
+
+    def play(self, string):
+        number = card_match.index(string)
+        self.numbers.remove(number)
+        high = self.high_prob(number)
+        self.logger.info('high: ' + str(high))
+        low = self.low_prob(number)
+        self.logger.info('low: ' + str(low))
+        if high >= low:
+            self.logger.info('press high')
+            return 'high'
+        elif high < low:
+            self.logger.info('press low')
+            return 'low'
+
 
 class Poker:
-    card_match = "XX23456789TJQKA"
-
     def __init__(self, cards):
         self.cards = cards
-        self.numbers = [Poker.card_match.index(c[1:])
+        self.numbers = [card_match.index(c[1])
                         for c in cards if c != "JOKER"]
         self.numbers.sort()
         self.suits = [c[:1] for c in cards if c != "JOKER"]
@@ -196,7 +291,7 @@ class Poker:
     def index_all(self, x):
         # numbers
         if isinstance(x, int):
-            string = Poker.card_match[x]
+            string = card_match[x]
         # suits
         elif isinstance(x, str):
             string = x
