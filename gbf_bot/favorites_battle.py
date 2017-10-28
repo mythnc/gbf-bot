@@ -34,7 +34,7 @@ class FavoritesBattle():
         while True:
             time.sleep(0.5)
             found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,
-                                   confidence=0.8)
+                                   confidence=0.75)
             if found is not None:
                 break
 
