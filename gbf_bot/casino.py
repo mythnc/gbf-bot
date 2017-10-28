@@ -1,4 +1,104 @@
+import logging
+from os.path import join
 import random
+import sys
+import time
+import pyautogui
+from . import images_dir
+from . import poker_config as config
+from . import utility
+from .components import Button
+
+logger = logging.getLogger(__name__)
+
+poker_dir = join(images_dir, 'poker')
+
+numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+suits = ['S', 'C', 'D', 'H']
+cards_name = [suit + number + '.png' for suit in suits for number in numbers]\
+             + ["JOKER.png"]
+
+
+class PokerBot:
+    logger = logging.getLogger(__name__ + '.PokerBot')
+
+    def __init__(self):
+        self.cards = [config['card' + str(i)] for i in range(5)]
+        self.card_size = config['card size']
+        self.start = Button('poker_start.png', config['start'])
+        self.ok = self.start
+        self.yes = Button('poker_yes.png', config['yes'])
+        self.no = Button('poker_no.png', config['no'])
+        self.logger = logging.getLogger(__name__ + '.' + PokerBot.__name__)
+
+    @staticmethod
+    def detect_cards():
+        base_images = utility.screenshot(0, 1/3, 1, 1/6)
+        count = 0
+        cards = [None] * 5
+        for card_name in cards_name:
+            confidence = 0.97
+            if card_name[1] in ('J', 'Q', 'K'):
+                confidence = 0.98
+            found = pyautogui.locate(join(poker_dir, card_name), base_images,
+                                     confidence=confidence)
+            if found:
+                PokerBot.logger.debug(card_name)
+                count += 1
+                i = (found[0] - 41) // 77
+                cards[i] = card_name.split('.')[0]
+            # hope there is no error
+            #if count == 5:
+            #    break
+        return cards
+
+    def click(self, card_index, duration=0.15):
+        center_point = self.cards[card_index]
+        return utility.click(center_point, self.card_size, duration)
+
+    @staticmethod
+    def is_double_up():
+        while True:
+            base_images = utility.screenshot(0, 1/4, 1, 1/12)
+            result = pyautogui.locate(join(poker_dir, 'to_double_up.png'), base_images,
+                                      confidence=0.9)
+            if result is not None:
+                return True
+            result = pyautogui.locate(join(poker_dir, 'to_retry.png'), base_images,
+                                      confidence=0.9)
+            if result is not None:
+                return False
+            time.sleep(0.5)
+
+    def activate(self):
+        pyautogui.PAUSE = 1
+
+        self.logger.info('poker bot start')
+        time.sleep(1)
+        self.start.double_click()
+        while True:
+            time.sleep(2)
+            cards = PokerBot.detect_cards()
+            self.logger.info(cards)
+            poker = Poker(cards)
+            hold_cards_index = poker.play()
+            hold_cards_index.sort()
+            pyautogui.PAUSE = 0.2
+            for card_index in hold_cards_index:
+                self.click(card_index)
+                time.sleep(0.1 * random.random())
+            pyautogui.PAUSE = 1
+            self.ok.click()
+            time.sleep(2.5 + 0.1 * random.random())
+            if PokerBot.is_double_up():
+                self.logger.info('play double up')
+                self.yes.click()
+                sys.exit(0)
+            else:
+                self.logger.info('new game')
+                utility.click()
+
+        self.logger.info('poker bot end')
 
 class Poker:
     card_match = "XX23456789TJQKA"

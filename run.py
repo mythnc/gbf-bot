@@ -37,6 +37,7 @@ def display_menu():
         print()
         print('1) continually play favorites top mission')
         print('2) continually play slime blasting')
+        print('3) continually play poker')
         print()
         print('press CTRL-C to leave')
         print('select option: ', end='')
@@ -48,7 +49,7 @@ def display_menu():
 
 def activate(i):
     favorite_mission = FavoritesBattle()
-    d = {'1': favorite_mission, '2': slime_blasting}
+    d = {'1': favorite_mission, '2': slime_blasting, '3': PokerBot()}
 
     try:
         count = 1
@@ -66,6 +67,7 @@ if __name__ == '__main__':
     log_gbf()
     from gbf_bot.favorites_battle import FavoritesBattle
     from gbf_bot import slime_blasting
+    from gbf_bot.casino import PokerBot
     root_logger.info('gbf robot is executing...')
     option = display_menu()
     activate(option)

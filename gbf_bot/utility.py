@@ -25,8 +25,12 @@ def calculate_click_point(center_point, size, signed, partition=4):
     return click_point
 
 
-def click(center_point, size, duration=0.15, click_point=None, signed=True,
-          behavior=pyautogui.click):
+def click(center_point=None, size=None, duration=0.15, click_point=None,
+          signed=True, behavior=pyautogui.click):
+    if center_point is None and size is None:
+        behavior(duration=duration)
+        return None
+
     point = click_point
     if point is None:
         point = calculate_click_point(center_point, size, signed)
@@ -62,3 +66,12 @@ def locate(image, *args, confidence=0.9, behavior=pyautogui.locateOnScreen):
 def locate_center(image, *args, confidence=0.9):
     return locate(image, *args, confidence=confidence,
                   behavior=pyautogui.locateCenterOnScreen)
+
+
+def screenshot(*args):
+    x_move_ratio, y_move_ratio, width_divide, height_divide = args
+    start_point = (x + int(width * x_move_ratio),
+                   y + int(height * y_move_ratio))
+    size = (int(width * width_divide), int(height * height_divide))
+    region = start_point + size
+    return pyautogui.screenshot(region=region)
