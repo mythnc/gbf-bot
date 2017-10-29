@@ -17,7 +17,7 @@ def log_gbf():
     logger = logging.getLogger('gbf_bot')
     logger.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
     log_dir = 'log'
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)

@@ -35,7 +35,7 @@ def click(center_point=None, size=None, duration=0.15, click_point=None,
     if point is None:
         point = calculate_click_point(center_point, size, signed)
     behavior(*point, duration=duration)
-    logger.info(str(point))
+    logger.debug(str(point))
     return point
 
 
@@ -46,7 +46,7 @@ def double_click(center_point, size, duration=0.0, click_point=None, signed=True
 
 def move_to(center_point):
     pyautogui.moveTo(*center_point)
-    logger.info(str(center_point))
+    logger.debug(str(center_point))
 
 
 def display_pause():

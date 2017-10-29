@@ -95,7 +95,7 @@ class SummonSelector:
             index = random.randint(0, 2)
             point = (x, y + SummonSelector.cell_interval * index)
 
-        logger.info('click selected summon')
+        self.logger.info('click selected summon')
         self.summon.center_point = point
         self.summon.double_click()
         time.sleep(random.random() * 0.25)
@@ -109,5 +109,5 @@ class SummonSelector:
                 self.logger.info('dialog popped up')
                 break
 
-        logger.info('click ok')
+        self.logger.info('click ok')
         SummonSelector.dialog_ok.click()

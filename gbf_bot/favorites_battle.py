@@ -8,8 +8,6 @@ from . import utility
 from .summon import SummonSelector
 from .components import Button
 
-logger = logging.getLogger(__name__)
-
 
 class FavoritesBattle():
     def __init__(self):
@@ -30,7 +28,7 @@ class FavoritesBattle():
         pyautogui.PAUSE = 1.5
 
         # wait before enter favorites menu
-        logger.debug('wait before enter favorites menu')
+        self.logger.debug('wait before enter favorites menu')
         while True:
             time.sleep(0.5)
             found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,

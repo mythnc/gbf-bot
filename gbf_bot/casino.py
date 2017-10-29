@@ -249,7 +249,7 @@ class Poker:
             select = [[], [random.randint(0, 4)]]
             result = select[i]
 
-        self.logger.info(result)
+        self.logger.debug(result)
         return result
 
     def play_with_joker(self):
@@ -286,6 +286,8 @@ class Poker:
         else:
             self.logger.info('no pair: chose joker')
             result = joker_index
+
+        self.logger.debug(result)
         return result
 
     def index_all(self, x):
