@@ -29,7 +29,7 @@ def click(center_point=None, size=None, duration=0.15, click_point=None,
           signed=True, behavior=pyautogui.click):
     if center_point is None and size is None:
         behavior(duration=duration)
-        return None
+        return pyautogui.position()
 
     point = click_point
     if point is None:

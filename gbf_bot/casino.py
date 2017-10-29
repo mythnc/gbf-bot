@@ -18,11 +18,11 @@ doubleup_dir = join(poker_dir, 'doubleup')
 card_match = "XX23456789TJQKA"
 numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['S', 'C', 'D', 'H']
-cards_name = [suit + number + '.png' for suit in suits for number in numbers]\
-             + ["JOKER.png"]
 
 
 class PokerBot:
+    cards_name = [suit + number + '.png' for suit in suits for number in numbers]\
+                 + ["JOKER.png"]
     logger = logging.getLogger(__name__ + '.PokerBot')
 
     def __init__(self):
@@ -33,6 +33,7 @@ class PokerBot:
         self.yes = Button('poker_yes.png', config['yes'])
         self.no = Button('poker_no.png', config['no'])
         self.play_time = config['play time']
+        self.mouse_position = None
         self.logger = logging.getLogger(__name__ + '.' + PokerBot.__name__)
 
     @staticmethod
@@ -40,7 +41,7 @@ class PokerBot:
         base_images = utility.screenshot(0, 1/3, 1, 1/6)
         count = 0
         cards = [None] * 5
-        for card_name in cards_name:
+        for card_name in PokerBot.cards_name:
             confidence = 0.97
             if card_name[1] in ('J', 'Q', 'K'):
                 confidence = 0.98
@@ -82,6 +83,7 @@ class PokerBot:
         current_time = time.time()
         time.sleep(1)
         self.start.double_click()
+        self.mouse_position = self.start
         while current_time - start_time <= self.play_time:
             time.sleep(2)
             cards = PokerBot.detect_cards()
@@ -89,22 +91,34 @@ class PokerBot:
             poker = Poker(cards)
             hold_cards_index = poker.play()
             hold_cards_index.sort()
+
             pyautogui.PAUSE = 0.2
             for card_index in hold_cards_index:
                 self.click(card_index)
-                time.sleep(0.1 * random.random())
+                time.sleep(0.2 * random.random())
+
             pyautogui.PAUSE = 1
-            self.ok.click()
-            time.sleep(2.5 + 0.1 * random.random())
+            if len(hold_cards_index) == 0:
+                utility.click()
+            else:
+                self.ok.click()
+            time.sleep(2.5 + 0.2 * random.random())
+
             if PokerBot.is_double_up():
                 self.logger.info('play double up')
                 self.yes.click()
                 DoubleUpBot().activate()
-            self.logger.info('new game')
-            self.start.click()
+                self.mouse_position = None
+
+            self.logger.info('\nnew game')
+            if self.mouse_position != self.start:
+                self.start.click()
+                self.mouse_position = self.start
+            else:
+                utility.click()
             current_time = time.time()
 
-        self.logger.info('poker bot end')
+        self.logger.info('time up: poker bot end')
         sys.exit(0)
 
 
@@ -115,8 +129,10 @@ class DoubleUpBot:
     def __init__(self):
         self.low = Button('poker_yes.png', config['yes'])
         self.high = Button('poker_no.png', config['no'])
-        self.logger = logging.getLogger(__name__ + '.' + DoubleUpBot.__name__)
         self.yes = self.low
+        self.no = self.high
+        self.mouse_position = self.yes
+        self.logger = logging.getLogger(__name__ + '.' + DoubleUpBot.__name__)
 
     @staticmethod
     def detect_card():
@@ -124,7 +140,7 @@ class DoubleUpBot:
         for card_name in DoubleUpBot.cards_name:
             confidence = 0.95
             if card_name[1] in ('J', 'Q', 'K'):
-                confidence = 0.94
+                confidence = 0.93
             found = pyautogui.locate(join(doubleup_dir, card_name), base_images,
                                      confidence=confidence)
             if found:
@@ -156,19 +172,30 @@ class DoubleUpBot:
     def activate(self):
         time.sleep(1)
         doubleup = DoubleUp()
-        for _ in range(10):
+        for round_ in range(1, 11):
+            self.logger.info('\nround ' + str(round_))
             card = DoubleUpBot.detect_card()
             result = doubleup.play(card[1])
-            if result == 'high':
-                self.high.click()
-            elif result == 'low':
-                self.low.click()
-            time.sleep(1.75 + 0.1 * random.random())
-            if DoubleUpBot.is_continue():
-                self.yes.click()
-                time.sleep(1.75 + 0.1 * random.random())
+
+            result_map = {'high': self.high, 'low': self.low}
+            if self.mouse_position == result_map[result]:
+                utility.click()
             else:
+                result_map[result].click()
+                self.mouse_position = result_map[result]
+            time.sleep(1 + 0.1 * random.random())
+
+            if round_ == 10:
                 return
+
+            if not DoubleUpBot.is_continue():
+                return
+            if self.mouse_position == self.yes:
+                utility.click()
+            else:
+                self.yes.click()
+                self.mouse_position = self.yes
+            time.sleep(1 + 0.1 * random.random())
 
 
 class DoubleUp:
