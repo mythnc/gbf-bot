@@ -5,6 +5,10 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.6.0 (2017-10-29)
+------------------
+* Add poker bot
+
 0.5.0 (2017-10-20)
 ------------------
 Optimize battle flow dramatically by using OpenCV
