@@ -71,3 +71,7 @@ Slime Blasting
 --------------
 * Set everything ready before blasting.
 
+Poker Bot
+---------
+* Enter poker play page first.
+* The default play time is 30 minutes (1800 seconds).

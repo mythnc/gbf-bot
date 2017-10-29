@@ -1,9 +1,8 @@
 import logging
 from os.path import join
-import random
 from PIL import Image
-import pyautogui
 from . import images_dir
+from . import utility
 
 logger = logging.getLogger(__name__)
 
@@ -17,35 +16,13 @@ class Button:
         self.signed = signed
         self.logger = logging.getLogger(__name__ + '.' + Button.__name__)
 
-    def calculate_click_point(self, partition=4):
-        for i in range(2):
-            d = 1
-            if self.signed:
-                d = self.move_direction()
-            random_x = random.randint(0, self.image.size[i] // partition) * d
-            self.click_point[i] = self.center_point[i] + random_x
-
-    @staticmethod
-    def move_direction():
-        d = {0: -1, 1: 1}
-        return d[random.randint(0, 1)]
-
-    def click(self, duration=0.15, click_point=None, behavior=pyautogui.click):
-        if click_point is None:
-            self.calculate_click_point()
-        else:
-            self.click_point = click_point
-        behavior(*self.click_point, duration=duration)
-        self.logger.info(str(self.click_point))
-        return self.click_point
+    def click(self, duration=0.15, click_point=None):
+        return utility.click(self.center_point, self.image.size, duration,
+                             click_point, self.signed)
 
     def double_click(self, duration=0.0, click_point=None):
-        return self.click(duration, click_point, pyautogui.doubleClick)
+        return utility.double_click(self.center_point, self.image.size, duration,
+                                    click_point, self.signed)
 
     def move_to(self):
-        pyautogui.moveTo(*self.center_point)
-        self.logger.info(str(self.center_point))
-
-    @staticmethod
-    def display_pause():
-        print(pyautogui.PAUSE)
+        utility.move_to(self.center_point)
