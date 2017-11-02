@@ -34,6 +34,8 @@ class PokerBot:
         self.no = Button('poker_no.png', config['no'])
         self.play_time = config['play time']
         self.mouse_position = None
+        self.used_chips = 0
+        self.got_chips = 0
         self.logger = logging.getLogger(__name__ + '.' + PokerBot.__name__)
 
     @staticmethod
@@ -43,7 +45,7 @@ class PokerBot:
         cards = [None] * 5
         for card_name in PokerBot.cards_name:
             confidence = 0.97
-            if card_name[1] in ('J', 'Q', 'K'):
+            if card_name[1] in ('J', 'Q', 'K') and card_name[:2] != 'SQ':
                 confidence = 0.98
             found = pyautogui.locate(join(poker_dir, card_name), base_images,
                                      confidence=confidence)
@@ -55,6 +57,8 @@ class PokerBot:
             # hope there is no error
             #if count == 5:
             #    break
+        if None in cards:
+            PokerBot.logger.warning('None in cards. Confience have to be adjust.')
         return cards
 
     def click(self, card_index, duration=0.15):
@@ -75,63 +79,97 @@ class PokerBot:
                 return False
             time.sleep(0.5)
 
+    def is_over_play_time(self, start_time):
+        return time.time() - start_time > self.play_time
+
+    def start_new_game(self):
+        self.logger.info('\nnew game')
+        self.used_chips += 1
+        if self.mouse_position != self.start:
+            self.start.click()
+            self.mouse_position = self.start
+        else:
+            utility.click()
+
+    def check_result(self, poker):
+        if len(poker.hold_cards_index) == 5:
+            return
+
+        pyautogui.PAUSE = 0.2
+        cards = PokerBot.detect_cards()
+        pyautogui.PAUSE = 1
+        self.logger.info(cards)
+        poker.new_cards(cards)
+        poker.calculate()
+
     def activate(self):
         pyautogui.PAUSE = 1
 
         self.logger.info('poker bot start')
         start_time = time.time()
-        current_time = time.time()
         time.sleep(1)
-        self.start.double_click()
-        self.mouse_position = self.start
-        while current_time - start_time <= self.play_time:
-            time.sleep(2)
-            cards = PokerBot.detect_cards()
-            self.logger.info(cards)
-            poker = Poker(cards)
-            hold_cards_index = poker.play()
-            hold_cards_index.sort()
+        self.start.click()
+        self.start_new_game()
+        poker = Poker()
+        try:
+            while not self.is_over_play_time(start_time):
+                time.sleep(2)
+                cards = PokerBot.detect_cards()
+                self.logger.info(cards)
+                poker.new_game(cards)
+                hold_cards_index = poker.calculate()
 
-            pyautogui.PAUSE = 0.2
-            for card_index in hold_cards_index:
-                self.click(card_index)
-                time.sleep(0.2 * random.random())
+                pyautogui.PAUSE = 0.2
+                for card_index in hold_cards_index:
+                    self.click(card_index)
+                    time.sleep(0.2 * random.random())
 
-            pyautogui.PAUSE = 1
-            if len(hold_cards_index) == 0:
-                utility.click()
-            else:
-                self.ok.click()
-            time.sleep(2.5 + 0.2 * random.random())
+                pyautogui.PAUSE = 1
+                if hold_cards_index:
+                    self.ok.click()
+                else:
+                    utility.click()
+                time.sleep(2.5 + 0.2 * random.random())
 
-            if PokerBot.is_double_up():
-                self.logger.info('play double up')
-                self.yes.click()
-                DoubleUpBot().activate()
-                self.mouse_position = None
+                if PokerBot.is_double_up():
+                    self.check_result(poker)
+                    chip = poker.earned_chips()
+                    self.logger.info('play double up')
+                    self.yes.click()
+                    self.got_chips += DoubleUpBot(chip).activate()
+                    self.mouse_position = None
 
-            self.logger.info('\nnew game')
-            if self.mouse_position != self.start:
-                self.start.click()
-                self.mouse_position = self.start
-            else:
-                utility.click()
-            current_time = time.time()
+                self.start_new_game()
+        except KeyboardInterrupt:
+            pass
+        except pyautogui.FailSafeException:
+            pass
+        finally:
+            self.do_statistics(start_time)
+            self.logger.info('poker bot end')
+            sys.exit(0)
 
-        self.logger.info('time up: poker bot end')
-        sys.exit(0)
+    def do_statistics(self, start_time):
+        play_time = time.time() - start_time
+        minute = play_time // 60
+        second = play_time % 60
+        self.logger.info('\nplay time: %02d:%02d', minute, second)
+        self.logger.info('used chips: %d', self.used_chips)
+        self.logger.info('got chips: %d', self.got_chips)
 
 
 class DoubleUpBot:
     cards_name = [suit + number + '.png' for suit in suits for number in numbers]
     logger = logging.getLogger(__name__ + '.DoubleUpBot')
 
-    def __init__(self):
+    def __init__(self, chip):
         self.low = Button('poker_yes.png', config['yes'])
         self.high = Button('poker_no.png', config['no'])
         self.yes = self.low
         self.no = self.high
         self.mouse_position = self.yes
+        self.chip = chip
+        self.previous_number = ''
         self.logger = logging.getLogger(__name__ + '.' + DoubleUpBot.__name__)
 
     @staticmethod
@@ -151,8 +189,7 @@ class DoubleUpBot:
         DoubleUpBot.logger.warning('No card could be found')
         return None
 
-    @staticmethod
-    def is_continue():
+    def is_continue(self):
         while True:
             base_images = utility.screenshot(0, 1/5, 1, 1/12)
             result = pyautogui.locate(join(doubleup_dir, 'continue.png'),
@@ -162,10 +199,12 @@ class DoubleUpBot:
             result = pyautogui.locate(join(doubleup_dir, 'finished1.png'),
                                       base_images, confidence=0.9)
             if result is not None:
+                self.chip = 0
                 return False
             result = pyautogui.locate(join(doubleup_dir, 'finished2.png'),
                                       base_images, confidence=0.9)
             if result is not None:
+                self.chip *= 2
                 return False
             time.sleep(0.5)
 
@@ -175,6 +214,9 @@ class DoubleUpBot:
         for round_ in range(1, 11):
             self.logger.info('\nround ' + str(round_))
             card = DoubleUpBot.detect_card()
+            if round_ > 1 and self.previous_number != card[1]:
+                self.chip *= 2
+
             result = doubleup.play(card[1])
 
             result_map = {'high': self.high, 'low': self.low}
@@ -185,16 +227,16 @@ class DoubleUpBot:
                 self.mouse_position = result_map[result]
             time.sleep(1 + 0.1 * random.random())
 
-            if round_ == 10:
-                return
+            if not self.is_continue():
+                self.logger.info('earned chips: ' + str(self.chip))
+                return self.chip
 
-            if not DoubleUpBot.is_continue():
-                return
             if self.mouse_position == self.yes:
                 utility.click()
             else:
                 self.yes.click()
                 self.mouse_position = self.yes
+            self.previous_number = card[1]
             time.sleep(1 + 0.1 * random.random())
 
 
@@ -225,97 +267,124 @@ class DoubleUp:
 
 
 class Poker:
-    def __init__(self, cards):
+    def __init__(self):
+        self.cards = []
+        self.numbers = []
+        self.suits = []
+        self.has_joker = False
+        self.poker_hands = ''
+        self.hold_cards_index = []
+        self.logger = logging.getLogger(__name__ + '.' + Poker.__name__)
+
+    def new_game(self, cards):
         self.cards = cards
-        self.numbers = [card_match.index(c[1])
-                        for c in cards if c != "JOKER"]
+        self.numbers = [card_match.index(c[1]) for c in cards if c != "JOKER"]
         self.numbers.sort()
         self.suits = [c[:1] for c in cards if c != "JOKER"]
         self.has_joker = "JOKER" in cards
-        self.logger = logging.getLogger(__name__ + '.' + Poker.__name__)
+        self.poker_hands = None
+        self.hold_cards_index = []
 
-    def play(self):
-        '''return index of keep cards
+    def new_cards(self, cards):
+        if len(self.hold_cards_index) == 5:
+            return
+
+        self.cards = cards
+        self.numbers = [card_match.index(c[1]) for c in cards if c != "JOKER"]
+        self.numbers.sort()
+        self.suits = [c[:1] for c in cards if c != "JOKER"]
+        self.has_joker = "JOKER" in cards
+
+    def calculate(self):
+        '''Calculate poker hands and return the card index which want to
+        hold in self.hold_cards_index.
         '''
+        if len(self.hold_cards_index) == 5:
+            return
+
         if self.has_joker:
-            return self.play_with_joker()
+            return self.calculate_with_joker()
 
         if self.is_straight_flush():
-            self.logger.info('straight flush')
-            result = list(range(5))
+            self.poker_hands = 'straight flush'
+            self.hold_cards_index = list(range(5))
         elif self.kind(4):
-            self.logger.info('4 kind')
-            result = self.index_all(self.kind(4))
+            self.poker_hands = '4 kind'
+            self.hold_cards_index = self.index_all(self.kind(4))
         elif self.is_full_house():
-            self.logger.info('full house')
-            result = list(range(5))
+            self.poker_hands = 'full house'
+            self.hold_cards_index = list(range(5))
         elif self.is_flush():
-            self.logger.info('flush')
-            result = list(range(5))
+            self.poker_hands = 'flush'
+            self.hold_cards_index = list(range(5))
         elif self.is_straight():
-            self.logger.info('straight')
-            result = list(range(5))
+            self.poker_hands = 'straight'
+            self.hold_cards_index = list(range(5))
         elif self.kind(3):
-            self.logger.info('3 kind')
-            result = self.index_all(self.kind(3))
+            self.poker_hands = '3 kind'
+            self.hold_cards_index = self.index_all(self.kind(3))
         elif self.two_pair():
-            self.logger.info('2 pair')
+            self.poker_hands = '2 pair'
             pairs = self.two_pair()
             indexes_2d = [self.index_all(pair) for pair in pairs]
-            result = [n for index in indexes_2d for n in index]
+            self.hold_cards_index = [n for index in indexes_2d for n in index]
         elif self.kind(2):
-            self.logger.info('one pair')
-            result = self.index_all(self.kind(2))
+            self.poker_hands = '1 pair'
+            self.hold_cards_index = self.index_all(self.kind(2))
         elif self.kind(4, 'suits'):
-            self.logger.info('4 kind of suits')
-            result = self.index_all(self.kind(4, 'suits'))
+            self.poker_hands = '4 same suits'
+            self.hold_cards_index = self.index_all(self.kind(4, 'suits'))
         else:
-            self.logger.info('no pair: random chose one or drop all')
+            self.poker_hands = 'no pair: random chose one or drop all'
             i = random.randint(0, 1)
             # drop all or random chose 1
             select = [[], [random.randint(0, 4)]]
-            result = select[i]
+            self.hold_cards_index = select[i]
 
-        self.logger.debug(result)
-        return result
+        self.hold_cards_index.sort()
+        self.logger.info(self.poker_hands)
+        self.logger.debug(self.hold_cards_index)
+        return self.hold_cards_index
 
-    def play_with_joker(self):
+    def calculate_with_joker(self):
         joker_index = [self.cards.index('JOKER')]
 
         interval = self.numbers[-1] - self.numbers[0]
         # 5 kind
-        if self.kind(4) and self.has_joker:
-            self.logger.info('5 kind')
-            result = list(range(5))
+        if self.kind(4):
+            self.poker_hands = '5 kind'
+            self.hold_cards_index = list(range(5))
         elif self.is_straight_flush():
-            self.logger.info('straight flush')
-            result = list(range(5))
+            self.poker_hands = 'straight flush'
+            self.hold_cards_index = list(range(5))
         # 4 kind
         elif self.kind(3) and self.has_joker:
-            self.logger.info('4 kind')
-            result = self.index_all(self.kind(3)) + joker_index
+            self.poker_hands = '4 kind'
+            self.hold_cards_index = self.index_all(self.kind(3)) + joker_index
         # full house
         elif self.two_pair() or self.kind(3):
-            self.logger.info('full house')
-            result = list(range(5))
+            self.poker_hands = 'full house'
+            self.hold_cards_index = list(range(5))
         elif self.is_flush():
-            self.logger.info('flush')
-            result = list(range(5))
+            self.poker_hands = 'flush'
+            self.hold_cards_index = list(range(5))
         # straight
         elif (self.is_straight() or (len(set(self.numbers)) == 4
                                      and (interval == 3 or interval == 4))):
-            self.logger.info('straight')
-            result = list(range(5))
+            self.poker_hands = 'straight'
+            self.hold_cards_index = list(range(5))
         # 3 kind
         elif self.kind(2):
-            self.logger.info('3 kind')
-            result = self.index_all(self.kind(2)) + joker_index
+            self.poker_hands = '3 kind'
+            self.hold_cards_index = self.index_all(self.kind(2)) + joker_index
         else:
-            self.logger.info('no pair: chose joker')
-            result = joker_index
+            self.poker_hands = 'no pair: chose joker'
+            self.hold_cards_index = joker_index
 
-        self.logger.debug(result)
-        return result
+        self.hold_cards_index.sort()
+        self.logger.info(self.poker_hands)
+        self.logger.debug(self.hold_cards_index)
+        return self.hold_cards_index
 
     def index_all(self, x):
         # numbers
@@ -325,6 +394,21 @@ class Poker:
         elif isinstance(x, str):
             string = x
         return [i for i, card in enumerate(self.cards) if string in card]
+
+    def earned_chips(self):
+        '''Calculate and return earned chips.
+        '''
+        chip_map = {
+            '5 kind': 60,
+            'straight flush': 25,
+            '4 kind': 20,
+            'full house': 10,
+            'flush': 4,
+            'straight': 3,
+            '3 kind': 1,
+            '2 pair': 1,
+        }
+        return chip_map[self.poker_hands]
 
     def two_pair(self):
         pair1 = self.kind(2)
