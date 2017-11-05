@@ -5,6 +5,10 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.7.0 (2017-11-05)
+------------------
+* Add chips statistics of poker bot
+
 0.6.0 (2017-10-29)
 ------------------
 * Add poker bot
