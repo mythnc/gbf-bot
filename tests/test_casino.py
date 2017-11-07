@@ -15,6 +15,9 @@ class TestPoker:
         poker.new_game(('S2', 'D2', 'JOKER', 'D4', 'C5'))
         poker.calculate()
         assert poker.hold_cards_index == [0, 1, 2]
+        poker.new_game(('SJ', 'D7', 'S8', 'JOKER', 'HJ'))
+        poker.calculate()
+        assert poker.hold_cards_index == [0, 3, 4]
         # straight
         poker.new_game(('S2', 'D3', 'H6', 'D4', 'C5'))
         poker.calculate()
@@ -90,6 +93,9 @@ class TestPoker:
         assert poker.index_all(2) == [0, 1]
         poker.new_game(('S3', 'D3', 'H3', 'C3', 'C5'))
         assert poker.index_all(3) == [0, 1, 2, 3]
+        poker.new_game(('SJ', 'D7', 'S8', 'JOKER', 'HJ'))
+        assert poker.index_all('J') == [0, 4]
+
 
     def test_two_pair(self):
         poker = Poker()

@@ -390,10 +390,11 @@ class Poker:
         # numbers
         if isinstance(x, int):
             string = card_match[x]
-        # suits
+        # string
         elif isinstance(x, str):
             string = x
-        return [i for i, card in enumerate(self.cards) if string in card]
+        return [i for i, card in enumerate(self.cards) if string in card
+                and card != 'JOKER']
 
     def earned_chips(self):
         '''Calculate and return earned chips.
