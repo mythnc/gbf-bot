@@ -109,10 +109,10 @@ class PokerBot:
         start_time = time.time()
         time.sleep(1)
         self.start.click()
-        self.start_new_game()
         poker = Poker()
         try:
             while not self.is_over_play_time(start_time):
+                self.start_new_game()
                 time.sleep(2)
                 cards = PokerBot.detect_cards()
                 self.logger.info(cards)
@@ -139,7 +139,6 @@ class PokerBot:
                     self.got_chips += DoubleUpBot(chip).activate()
                     self.mouse_position = None
 
-                self.start_new_game()
         except KeyboardInterrupt:
             pass
         except pyautogui.FailSafeException:
@@ -455,6 +454,4 @@ class Poker:
         return False
 
     def is_straight_flush(self):
-        if self.is_straight() and self.is_flush():
-            return True
-        return False
+        return self.is_straight() and self.is_flush()
