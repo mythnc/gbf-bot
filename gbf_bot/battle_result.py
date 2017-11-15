@@ -12,7 +12,9 @@ from .components import Button
 logger = logging.getLogger(__name__)
 
 result_ok = Button('ok1.png', config['result ok'])
-to_quest = Button('to_quest.png', config['to quest'])
+to_next = Button('to_quest.png', config['to next'])
+if config['guild wars'] == 'yes':
+    to_next = Button('to_event.png', config['to next'])
 friend_cancel = Button('cancel.png', config['friend cancel'])
 
 
@@ -28,10 +30,11 @@ def activate():
             break
 
     logger.info('click result ok')
-    result_ok.double_click()
+    result_ok.click()
     time.sleep(0.8 + random.random() * 0.25)
 
     chips_dialog()
+    guild_wars_dialog()
 
     # wait before next step
     count = 0
@@ -41,13 +44,13 @@ def activate():
         if count % 10 == 0:
             pyautogui.click()
         time.sleep(0.5)
-        found = utility.locate(to_quest.path, 0, 1/2, 1, 1/15)
+        found = utility.locate(to_next.path, 0, 2/5, 1, 1/5)
         if found is not None:
             break
         count += 1
 
-    logger.info('click to quest')
-    to_quest.click()
+    logger.info('click to next')
+    to_next.click()
     time.sleep(0.8)
 
     # friend request cancel if any
@@ -84,3 +87,21 @@ def halo_dialog():
         logger.info('dimension dialog found')
         logger.info('gbf robt finished')
         sys.exit(0)
+
+def guild_wars_dialog():
+    if config['guild wars'] == 'no':
+        return
+
+    count = 0
+    ok = Button('ok1.png', config['guild wars ok'])
+    while True:
+        count += 1
+        if count % 10 == 0:
+            to_next.click()
+
+        time.sleep(0.5)
+        found = utility.locate(ok.path, 0, 2/3, 1, 1/6)
+        if found is not None:
+            logger.info('guild wars result dialog found')
+            ok.click()
+            return
