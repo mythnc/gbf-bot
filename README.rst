@@ -75,3 +75,9 @@ Poker Bot
 ---------
 * Enter poker play page first.
 * The default play time is 30 minutes (1800 seconds).
+  
+Guild Wars EXTREME+
+-------------------
+* First, enter guild wars page, and select chromeApps windows immediately
+  after select guild wars ex+.
+* You can create your battle behaviors in `guild_wars.ini` manually.
