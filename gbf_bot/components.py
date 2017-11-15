@@ -5,7 +5,7 @@ from . import utility
 
 
 class Button:
-    def __init__(self, name, point, signed=True):
+    def __init__(self, name, point=None, signed=True):
         self.path = join(images_dir, 'buttons', name)
         self.image = Image.open(self.path)
         self.center_point = point

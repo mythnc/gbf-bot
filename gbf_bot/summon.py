@@ -44,12 +44,13 @@ class SummonSelector:
     first_summon_pt = config['first summon cell']
     logger = logging.getLogger(__name__ + '.' + 'SummonSelector')
 
-    def __init__(self, names):
+    def __init__(self, names, is_guild_wars=False):
         self.names = names
         self.logger = logging.getLogger(__name__ + '.' + SummonSelector.__name__)
         # default summon is the top 1
         self.summon = Button('summon_cell.png',
                              SummonSelector.first_summon_pt)
+        self.is_guild_wars = is_guild_wars
 
     @staticmethod
     def find(name):
@@ -69,13 +70,18 @@ class SummonSelector:
 
     def activate(self):
         # wait before summon page is ready
+        count = 0
         while True:
             time.sleep(0.5)
+            if self.is_guild_wars and count % 10 == 0:
+                self.logger.debug('click again')
+                utility.click()
             image = summon_mapping['hint']
             hint = utility.locate(image, 0, 0, 1, 1/3)
             if hint is not None:
                 self.logger.info('enter summon page')
                 break
+            count += 1
         time.sleep(random.random() * 0.25)
 
         # find summon
