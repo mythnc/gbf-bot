@@ -80,4 +80,4 @@ Guild Wars EXTREME+
 -------------------
 * First, enter guild wars page, and select chromeApps windows immediately
   after select guild wars ex+.
-* You can create your battle behaviors in `guild_wars.ini` manually.
+* You can create your battle behaviors in ``guild_wars.ini`` manually.
