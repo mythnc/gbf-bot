@@ -5,6 +5,14 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.8.1 (2017-11-27)
+------------------
+Improve poker bot
+
+* Make chips statistics more precisely
+* Fix 'JOKER' will be matched if string = 'J'
+* Refactoring
+
 0.8.0 (2017-11-15)
 ------------------
 * Add guild wars extreme+ script
