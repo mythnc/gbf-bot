@@ -109,10 +109,10 @@ class PokerBot:
         start_time = time.time()
         time.sleep(1)
         self.start.click()
-        self.start_new_game()
         poker = Poker()
         try:
             while not self.is_over_play_time(start_time):
+                self.start_new_game()
                 time.sleep(2)
                 cards = PokerBot.detect_cards()
                 self.logger.info(cards)
@@ -139,7 +139,6 @@ class PokerBot:
                     self.got_chips += DoubleUpBot(chip).activate()
                     self.mouse_position = None
 
-                self.start_new_game()
         except KeyboardInterrupt:
             pass
         except pyautogui.FailSafeException:
@@ -170,11 +169,13 @@ class DoubleUpBot:
         self.mouse_position = self.yes
         self.chip = chip
         self.previous_number = ''
+        self.card = ''
         self.logger = logging.getLogger(__name__ + '.' + DoubleUpBot.__name__)
 
     @staticmethod
-    def detect_card():
-        base_images = utility.screenshot(0, 1/4, 1, 1/4)
+    def detect_card(is_final_round=False):
+        x_move_ratio = 1/2 if is_final_round else 0
+        base_images = utility.screenshot(x_move_ratio, 1/4, 1, 1/4)
         for card_name in DoubleUpBot.cards_name:
             confidence = 0.95
             if card_name[1] in ('J', 'Q', 'K'):
@@ -196,16 +197,21 @@ class DoubleUpBot:
                                       base_images, confidence=0.9)
             if result is not None:
                 return True
-            result = pyautogui.locate(join(doubleup_dir, 'finished1.png'),
+
+            result = pyautogui.locate(join(doubleup_dir, 'lose.png'),
                                       base_images, confidence=0.9)
             if result is not None:
                 self.chip = 0
                 return False
-            result = pyautogui.locate(join(doubleup_dir, 'finished2.png'),
+
+            result = pyautogui.locate(join(doubleup_dir, 'maximum.png'),
                                       base_images, confidence=0.9)
             if result is not None:
-                self.chip *= 2
+                card = DoubleUpBot.detect_card(True)
+                if card_match.index(self.card[1]) != card_match.index(card[1]):
+                    self.chip *= 2
                 return False
+
             time.sleep(0.5)
 
     def activate(self):
@@ -213,11 +219,11 @@ class DoubleUpBot:
         doubleup = DoubleUp()
         for round_ in range(1, 11):
             self.logger.info('\nround ' + str(round_))
-            card = DoubleUpBot.detect_card()
-            if round_ > 1 and self.previous_number != card[1]:
+            self.card = DoubleUpBot.detect_card()
+            if round_ > 1 and self.previous_number != self.card[1]:
                 self.chip *= 2
 
-            result = doubleup.play(card[1])
+            result = doubleup.play(self.card[1])
 
             result_map = {'high': self.high, 'low': self.low}
             if self.mouse_position == result_map[result]:
@@ -236,7 +242,7 @@ class DoubleUpBot:
             else:
                 self.yes.click()
                 self.mouse_position = self.yes
-            self.previous_number = card[1]
+            self.previous_number = self.card[1]
             time.sleep(1 + 0.1 * random.random())
 
 
@@ -390,10 +396,11 @@ class Poker:
         # numbers
         if isinstance(x, int):
             string = card_match[x]
-        # suits
+        # string
         elif isinstance(x, str):
             string = x
-        return [i for i, card in enumerate(self.cards) if string in card]
+        return [i for i, card in enumerate(self.cards) if string in card
+                and card != 'JOKER']
 
     def earned_chips(self):
         '''Calculate and return earned chips.
@@ -454,6 +461,4 @@ class Poker:
         return False
 
     def is_straight_flush(self):
-        if self.is_straight() and self.is_flush():
-            return True
-        return False
+        return self.is_straight() and self.is_flush()
