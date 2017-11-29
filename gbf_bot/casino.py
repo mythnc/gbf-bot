@@ -1,3 +1,4 @@
+from datetime import datetime
 from fractions import Fraction
 import logging
 from os.path import join
@@ -18,6 +19,12 @@ doubleup_dir = join(poker_dir, 'doubleup')
 card_match = "XX23456789TJQKA"
 numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['S', 'C', 'D', 'H']
+
+
+def save_image(im):
+    today = datetime.now()
+    file_name = str(today).split('.')[0].translate({ord(c): '' for c in ' :-'})
+    im.save('{}.png'.format(file_name))
 
 
 class PokerBot:
@@ -59,6 +66,7 @@ class PokerBot:
             #    break
         if None in cards:
             PokerBot.logger.warning('None in cards. Confience have to be adjust.')
+            save_image(base_image)
         return cards
 
     def click(self, card_index, duration=0.15):
@@ -188,6 +196,7 @@ class DoubleUpBot:
 
         # confidence has to be adjusted
         DoubleUpBot.logger.warning('No card could be found')
+        save_image(base_image)
         return None
 
     def is_continue(self):
