@@ -1,3 +1,4 @@
+import argparse
 from datetime import datetime
 import logging
 import os
@@ -12,6 +13,16 @@ root_formatter = logging.Formatter('%(name)s:%(levelname)s:%(message)s')
 root_ch.setFormatter(root_formatter)
 root_logger.addHandler(root_ch)
 
+parser = argparse.ArgumentParser(description="Granblue Fantasy Bot")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-f", "--favorites", action="store_true",
+                   help="Continually play favorites top mission")
+group.add_argument("-b", "--blasting", action="store_true",
+                   help="Continually play slime blasting")
+group.add_argument("-p", "--poker", action="store_true",
+                   help="Continually play poker, default play time is 30 minutes")
+group.add_argument("-g", "--guildwars", action="store_true",
+                   help="Continually play guild wars extreme+")
 
 def log_gbf():
     logger = logging.getLogger('gbf_bot')
@@ -32,32 +43,23 @@ def log_gbf():
     logger.addHandler(fh)
 
 
-def display_menu():
-    try:
-        print()
-        print('1) continually play favorites top mission')
-        print('2) continually play slime blasting')
-        print('3) continually play poker')
-        print('4) continually play guild wars ex+')
-        print()
-        print('press CTRL-C to leave')
-        print('select option: ', end='')
-        return input()
-    except KeyboardInterrupt:
-        root_logger.info('\ngbf robot finished')
-        sys.exit(0)
+def activate():
+    args = parser.parse_args()
+    if args.favorites:
+        d = FavoritesBattle()
+    elif args.blasting:
+        d = slime_blasting
+    elif args.poker:
+        d = PokerBot()
+    elif args.guildwars:
+        d = guild_wars
 
-
-def activate(i):
-    favorite_mission = FavoritesBattle()
-    d = {'1': favorite_mission, '2': slime_blasting, '3': PokerBot(),
-         '4': guild_wars}
-
+    root_logger.info('gbf robot is executing...')
     try:
         count = 1
         while True:
             root_logger.info('\nexecution times: ' + str(count))
-            d[i].activate()
+            d.activate()
             count += 1
     except KeyboardInterrupt:
         root_logger.info('gbf robot finished')
@@ -66,11 +68,14 @@ def activate(i):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        parser.parse_args(["-h"])
+        sys.exit(0)
+
     log_gbf()
     from gbf_bot.favorites_battle import FavoritesBattle
     from gbf_bot import slime_blasting
     from gbf_bot import guild_wars
     from gbf_bot.casino import PokerBot
-    root_logger.info('gbf robot is executing...')
-    option = display_menu()
-    activate(option)
+
+    activate()
