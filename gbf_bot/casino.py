@@ -40,14 +40,14 @@ class PokerBot:
 
     @staticmethod
     def detect_cards():
-        base_images = utility.screenshot(0, 1/3, 1, 1/6)
+        base_image = utility.screenshot(0, 1/3, 1, 1/6)
         count = 0
         cards = [None] * 5
         for card_name in PokerBot.cards_name:
             confidence = 0.97
             if card_name[1] in ('J', 'Q', 'K') and card_name[:2] != 'SQ':
                 confidence = 0.98
-            found = pyautogui.locate(join(poker_dir, card_name), base_images,
+            found = pyautogui.locate(join(poker_dir, card_name), base_image,
                                      confidence=confidence)
             if found:
                 PokerBot.logger.debug(card_name)
@@ -68,12 +68,12 @@ class PokerBot:
     @staticmethod
     def is_double_up():
         while True:
-            base_images = utility.screenshot(0, 1/4, 1, 1/12)
-            result = pyautogui.locate(join(poker_dir, 'to_double_up.png'), base_images,
+            base_image = utility.screenshot(0, 1/4, 1, 1/12)
+            result = pyautogui.locate(join(poker_dir, 'to_double_up.png'), base_image,
                                       confidence=0.9)
             if result is not None:
                 return True
-            result = pyautogui.locate(join(poker_dir, 'to_retry.png'), base_images,
+            result = pyautogui.locate(join(poker_dir, 'to_retry.png'), base_image,
                                       confidence=0.9)
             if result is not None:
                 return False
@@ -175,12 +175,12 @@ class DoubleUpBot:
     @staticmethod
     def detect_card(is_final_round=False):
         x_move_ratio = 1/2 if is_final_round else 0
-        base_images = utility.screenshot(x_move_ratio, 1/4, 1, 1/4)
+        base_image = utility.screenshot(x_move_ratio, 1/4, 1, 1/4)
         for card_name in DoubleUpBot.cards_name:
             confidence = 0.95
             if card_name[1] in ('J', 'Q', 'K'):
                 confidence = 0.93
-            found = pyautogui.locate(join(doubleup_dir, card_name), base_images,
+            found = pyautogui.locate(join(doubleup_dir, card_name), base_image,
                                      confidence=confidence)
             if found:
                 DoubleUpBot.logger.info(card_name.split('.')[0])
@@ -192,20 +192,20 @@ class DoubleUpBot:
 
     def is_continue(self):
         while True:
-            base_images = utility.screenshot(0, 1/5, 1, 1/12)
+            base_image = utility.screenshot(0, 1/5, 1, 1/12)
             result = pyautogui.locate(join(doubleup_dir, 'continue.png'),
-                                      base_images, confidence=0.9)
+                                      base_image, confidence=0.9)
             if result is not None:
                 return True
 
             result = pyautogui.locate(join(doubleup_dir, 'lose.png'),
-                                      base_images, confidence=0.9)
+                                      base_image, confidence=0.9)
             if result is not None:
                 self.chip = 0
                 return False
 
             result = pyautogui.locate(join(doubleup_dir, 'maximum.png'),
-                                      base_images, confidence=0.9)
+                                      base_image, confidence=0.9)
             if result is not None:
                 card = DoubleUpBot.detect_card(True)
                 if card_match.index(self.card[1]) != card_match.index(card[1]):
