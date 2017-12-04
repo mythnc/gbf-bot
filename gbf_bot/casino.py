@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 poker_dir = join(images_dir, 'poker')
 doubleup_dir = join(poker_dir, 'doubleup')
 
+is_lag = True
+
 card_match = "XX23456789TJQKA"
 numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['S', 'C', 'D', 'H']
@@ -146,6 +148,8 @@ class PokerBot:
                 else:
                     utility.click()
                 time.sleep(2.5 + 0.2 * random.random())
+                if is_lag:
+                    time.sleep(1)
 
                 if PokerBot.is_double_up():
                     self.check_result(poker)
@@ -253,6 +257,8 @@ class DoubleUpBot:
                 result_map[result].click()
                 self.mouse_position = result_map[result]
             time.sleep(1 + 0.1 * random.random())
+            if is_lag:
+                time.sleep(1)
 
             if not self.is_continue():
                 self.logger.info('earned chips: ' + str(self.chip))
@@ -265,6 +271,8 @@ class DoubleUpBot:
                 self.mouse_position = self.yes
             self.previous_number = self.card[1]
             time.sleep(1 + 0.1 * random.random())
+            if is_lag:
+                time.sleep(1)
 
 
 class DoubleUp:
