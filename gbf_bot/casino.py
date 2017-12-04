@@ -21,6 +21,10 @@ numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits = ['S', 'C', 'D', 'H']
 
 
+class NoneInCardsException(Exception):
+    pass
+
+
 def save_image(im):
     today = datetime.now()
     file_name = str(today).split('.')[0].translate({ord(c): '' for c in ' :-'})
@@ -48,25 +52,22 @@ class PokerBot:
     @staticmethod
     def detect_cards():
         base_image = utility.screenshot(0, 1/3, 1, 1/6)
-        count = 0
         cards = [None] * 5
         for card_name in PokerBot.cards_name:
             confidence = 0.97
-            if card_name[1] in ('J', 'Q', 'K') and card_name[:2] != 'SQ':
-                confidence = 0.98
             found = pyautogui.locate(join(poker_dir, card_name), base_image,
                                      confidence=confidence)
             if found:
                 PokerBot.logger.debug(card_name)
-                count += 1
                 i = (found[0] - 41) // 77
                 cards[i] = card_name.split('.')[0]
-            # hope there is no error
-            #if count == 5:
-            #    break
+
+        PokerBot.logger.info(cards)
+        # Current algorithm can't figure out this kind of cards
         if None in cards:
-            PokerBot.logger.warning('None in cards. Confience have to be adjust.')
+            PokerBot.logger.warning('None in cards. Hold all.')
             save_image(base_image)
+            raise NoneInCardsException()
         return cards
 
     def click(self, card_index, duration=0.15):
@@ -99,14 +100,17 @@ class PokerBot:
         else:
             utility.click()
 
-    def check_result(self, poker):
+    @staticmethod
+    def check_result(poker):
         if len(poker.hold_cards_index) == 5:
             return
 
         pyautogui.PAUSE = 0.2
-        cards = PokerBot.detect_cards()
+        try:
+            cards = PokerBot.detect_cards()
+        except NoneInCardsException:
+            return
         pyautogui.PAUSE = 1
-        self.logger.info(cards)
         poker.new_cards(cards)
         poker.calculate()
 
@@ -122,10 +126,14 @@ class PokerBot:
             while not self.is_over_play_time(start_time):
                 self.start_new_game()
                 time.sleep(2)
-                cards = PokerBot.detect_cards()
-                self.logger.info(cards)
-                poker.new_game(cards)
-                hold_cards_index = poker.calculate()
+                try:
+                    cards = PokerBot.detect_cards()
+                    poker.new_game(cards)
+                    hold_cards_index = poker.calculate()
+                    is_none_card = False
+                except NoneInCardsException:
+                    hold_cards_index = list(range(5))
+                    is_none_card = True
 
                 pyautogui.PAUSE = 0.2
                 for card_index in hold_cards_index:
@@ -142,6 +150,8 @@ class PokerBot:
                 if PokerBot.is_double_up():
                     self.check_result(poker)
                     chip = poker.earned_chips()
+                    if is_none_card:
+                        chip = 1
                     self.logger.info('play double up')
                     self.yes.click()
                     self.got_chips += DoubleUpBot(chip).activate()
@@ -151,6 +161,8 @@ class PokerBot:
             pass
         except pyautogui.FailSafeException:
             pass
+        except Exception as e:
+            self.logger.error(e)
         finally:
             self.do_statistics(start_time)
             self.logger.info('poker bot end')
