@@ -5,6 +5,19 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.8.2 (2017-11-27)
+------------------
+**Features**
+
+* Parameterize run.py. (#3)
+
+**Improvements**
+
+* Take screenshot if card can't be found. (#4)
+* Raise an exception if there is None in cards. (#5)
+* Update double up images: D2 and DQ.
+* Add net lag parameter in poker bot.
+
 0.8.1 (2017-11-27)
 ------------------
 Improve poker bot
