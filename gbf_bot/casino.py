@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 poker_dir = join(images_dir, 'poker')
 doubleup_dir = join(poker_dir, 'doubleup')
 
-is_lag = True
+is_lag = False
 
 card_match = "XX23456789TJQKA"
 numbers = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
@@ -111,7 +111,7 @@ class PokerBot:
         try:
             cards = PokerBot.detect_cards()
         except NoneInCardsException:
-            return
+            raise NoneInCardsException()
         pyautogui.PAUSE = 1
         poker.new_cards(cards)
         poker.calculate()
@@ -132,10 +132,8 @@ class PokerBot:
                     cards = PokerBot.detect_cards()
                     poker.new_game(cards)
                     hold_cards_index = poker.calculate()
-                    is_none_card = False
                 except NoneInCardsException:
                     hold_cards_index = list(range(5))
-                    is_none_card = True
 
                 pyautogui.PAUSE = 0.2
                 for card_index in hold_cards_index:
@@ -152,9 +150,10 @@ class PokerBot:
                     time.sleep(1)
 
                 if PokerBot.is_double_up():
-                    self.check_result(poker)
-                    chip = poker.earned_chips()
-                    if is_none_card:
+                    try:
+                        self.check_result(poker)
+                        chip = poker.earned_chips()
+                    except NoneInCardsException:
                         chip = 1
                     self.logger.info('play double up')
                     self.yes.click()
@@ -240,7 +239,7 @@ class DoubleUpBot:
             time.sleep(0.5)
 
     def activate(self):
-        time.sleep(1)
+        time.sleep(3)
         doubleup = DoubleUp()
         for round_ in range(1, 11):
             self.logger.info('\nround ' + str(round_))
