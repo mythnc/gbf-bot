@@ -1,7 +1,7 @@
 import logging
 import random
 import pyautogui
-from . import top_left, window_size
+from .constants import top_left, window_size
 
 logger = logging.getLogger(__name__)
 

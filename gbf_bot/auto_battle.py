@@ -2,7 +2,7 @@ import logging
 import random
 import time
 import pyautogui
-from . import auto_battle_config as config
+from .constants import auto_battle_config as config
 from . import utility
 from .components import Button
 

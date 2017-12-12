@@ -1,6 +1,6 @@
 from os.path import join
 from PIL import Image
-from . import images_dir
+from .constants import images_dir
 from . import utility
 
 

@@ -6,8 +6,7 @@ import random
 import sys
 import time
 import pyautogui
-from . import images_dir
-from . import poker_config as config
+from .constants import images_dir, poker_config as config
 from . import utility
 from .components import Button
 

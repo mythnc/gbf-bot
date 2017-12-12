@@ -4,8 +4,7 @@ from os.path import join
 import random
 import time
 import pyautogui
-from . import package_root, images_dir
-from . import guild_wars_config as config
+from .constants import package_root, images_dir, guild_wars_config as config
 from . import utility, battle_result
 from .summon import SummonSelector
 from .components import Button

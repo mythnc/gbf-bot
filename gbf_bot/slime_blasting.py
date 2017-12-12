@@ -2,7 +2,7 @@ import logging
 import random
 import time
 import pyautogui
-from . import slime_blasting_config as config
+from .constants import slime_blasting_config as config
 from .components import Button
 
 logger = logging.getLogger(__name__)

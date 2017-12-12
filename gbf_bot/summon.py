@@ -3,8 +3,7 @@ from os.path import join
 import random
 import time
 import pyautogui
-from . import images_dir
-from . import summon_config as config
+from .constants import images_dir, summon_config as config
 from . import utility
 from .components import Button
 

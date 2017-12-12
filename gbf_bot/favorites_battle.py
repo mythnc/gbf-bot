@@ -2,9 +2,8 @@ import logging
 import random
 import time
 import pyautogui
-from . import favorites_mission_config as config
-from . import auto_battle, battle_result
-from . import utility
+from . import auto_battle, battle_result, utility
+from .constants import favorites_mission_config as config
 from .summon import SummonSelector
 from .components import Button
 
