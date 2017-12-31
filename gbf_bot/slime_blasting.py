@@ -32,7 +32,7 @@ def activate():
     time.sleep(random.random() * 0.25)
     logger.info('click back')
     back_point = back.click()
-    time.sleep(random.random() * 0.25)
+    time.sleep(1 + random.random() * 0.25)
 
     # battle result
     logger.info('click back')
