@@ -5,6 +5,16 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+0.8.3 (2018-02-11)
+------------------
+**Improvements**
+
+* Add fire summons.
+
+**Features**
+
+* Adjust parameters. (including click postion, guild wars and so on)
+
 0.8.2 (2017-11-27)
 ------------------
 **Features**
