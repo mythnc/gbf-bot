@@ -26,14 +26,14 @@ def calculate_click_point(center_point, size, signed, partition=4):
 
 
 def click(center_point=None, size=None, duration=0.15, click_point=None,
-          signed=True, behavior=pyautogui.click):
+          signed=True, behavior=pyautogui.click, partition=4):
     if center_point is None and size is None:
         behavior(duration=duration)
         return pyautogui.position()
 
     point = click_point
     if point is None:
-        point = calculate_click_point(center_point, size, signed)
+        point = calculate_click_point(center_point, size, signed, partition)
     behavior(*point, duration=duration)
     logger.debug(str(point))
     return point

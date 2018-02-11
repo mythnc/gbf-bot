@@ -12,9 +12,9 @@ class Button:
         self.click_point = [None] * 2
         self.signed = signed
 
-    def click(self, duration=0.15, click_point=None):
+    def click(self, duration=0.15, click_point=None, partition=4):
         return utility.click(self.center_point, self.image.size, duration,
-                             click_point, self.signed)
+                             click_point, self.signed, partition=partition)
 
     def double_click(self, duration=0.0, click_point=None):
         return utility.double_click(self.center_point, self.image.size, duration,
