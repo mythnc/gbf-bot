@@ -102,13 +102,14 @@ def is_finished():
 def activate():
     pyautogui.PAUSE = 1.5
 
-    time.sleep(2)
+    time.sleep(1)
+    pyautogui.click(1671, 232)
     pyautogui.scroll(-10)
     logger.info('click cell')
-    cell.click()
+    cell.click(partition=8)
     time.sleep(0.75)
     logger.info('click ex+')
-    ex_plus.click()
+    ex_plus.click(partition=10)
 
     # chose summon
     summon.activate()
