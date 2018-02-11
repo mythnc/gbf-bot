@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 summon_dir = join(images_dir, 'summons')
 summon_mapping = {
     'hint': join(summon_dir, 'hint.png'),
+    # fire
+    'athena': join(summon_dir, 'athena.png'),
+    'colossus omega': join(summon_dir, 'colossus_omega.png'),
+    'shiva': join(summon_dir, 'shiva.png'),
     # water
     'leviathan omega': join(summon_dir, 'leviathan_omega.png'),
     'europa': join(summon_dir, 'europa.png'),
