@@ -59,7 +59,7 @@ def activate():
         count = 1
         while True:
             root_logger.info('\nexecution times: ' + str(count))
-            d.activate()
+            d.activate(count)
             count += 1
     except KeyboardInterrupt:
         root_logger.info('gbf robot finished')

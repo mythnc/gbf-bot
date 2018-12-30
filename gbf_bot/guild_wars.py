@@ -36,6 +36,26 @@ skills_map = [
     skill3,
     skill4,
 ]
+
+battle_summon_list = Button('battle_summon_list.png', config['battle summon list'])
+battle_summon1 = None
+battle_summon2 = None
+battle_summon3 = None
+battle_summon4 = None
+battle_summon5 = None
+battle_summon6 = Button('battle_summon_list.png', config['battle summon 6'])
+summons_map = [
+    0,
+    battle_summon1,
+    battle_summon2,
+    battle_summon3,
+    battle_summon4,
+    battle_summon5,
+    battle_summon6,
+]
+battle_summon_confirm = Button('ok3.png', config['battle summon confirm'])
+
+
 cell = Button('guildwars_ex_cell.png', config['cell'], False)
 ex_plus = Button('guildwars_ex_plus.png', config['ex+'])
 ok = Button('ok1.png')
@@ -55,27 +75,45 @@ def wait_battle_start(sleep_time=0.5):
 
 def cast(stage):
     try:
-        characters = script[stage]
+        commands = script[stage]
     except KeyError:
-        characters = []
+        commands = []
 
     skill_count = 0
-    n = len(characters)
-    for i, character in enumerate(characters):
-        characters_map[character].click()
-        skills = [int(skill) for skill in characters[character].split(',')]
-        for skill in skills:
-            skills_map[skill].click()
-            time.sleep(random.random() * 0.2)
+    n = len(commands)
+    for i, command in enumerate(commands):
+        if 'character' in command:
+            skill_count += use_character(command, commands[command])
+        elif 'summon' == command:
+            use_summon(int(commands[command]))
             skill_count += 1
-        if i < n - 1:
+        
+        if i < n - 1 and 'character' in command:
             back.click()
         time.sleep(random.random() * 0.2)
     attack.click()
-    ratio = 2.5
+    ratio = 2.4
     # TODO: attention to this 2.4 or 2.5 is good
     # If lag, set ration to 3
     time.sleep(skill_count * ratio + random.random() * 0.5)
+
+
+def use_character(character, behavior):
+    characters_map[character].click()
+    skills = [int(skill) for skill in behavior.split(',')]
+    count = 0
+    for skill in skills:
+        skills_map[skill].click()
+        time.sleep(random.random() * 0.2)
+        count += 1
+    return count
+
+
+def use_summon(number):
+    battle_summon_list.click()
+    summons_map[number].click()
+    battle_summon_confirm.click(partition=8)
+    time.sleep(random.random() * 0.2)
 
 
 def is_over_drive():
@@ -99,26 +137,28 @@ def is_finished():
     return False
 
 
-def activate():
+def activate(count):
     pyautogui.PAUSE = 1.5
 
-    time.sleep(1)
-    pyautogui.click(1671, 232)
-    pyautogui.scroll(-10)
-    logger.info('click cell')
-    cell.click(partition=8)
-    time.sleep(0.75)
-    logger.info('click ex+')
-    ex_plus.click(partition=10)
+    # chose enemy
+    if count == 1:
+        time.sleep(1)
+        pyautogui.click(1671, 232)
+        pyautogui.scroll(-10)
+        logger.info('click cell')
+        cell.click(partition=8)
+        time.sleep(0.75)
+        logger.info('click ex+')
+        ex_plus.click(partition=10)
 
     # chose summon
-    summon.activate()
+    summon.activate(True)
 
     wait_battle_start()
     # battle start
     # round by round
-    for i in range(1, 30):
-        round_ = 'round ' + str(i)
+    for times in range(1, 30):
+        round_ = 'round ' + str(times)
         logger.info('\n' + round_)
         cast(round_)
         logger.info('reload and wait')
@@ -128,7 +168,7 @@ def activate():
         if is_finished():
             break
 
-        if i == 1 and config['assault time'] == 'yes':
+        if times == 1 and config['assault time'] == 'yes':
             time.sleep(15)
 
         if is_over_drive():
