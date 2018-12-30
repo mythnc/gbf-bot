@@ -1,6 +1,7 @@
 import logging
 from os.path import join
 import random
+import sys
 import time
 import pyautogui
 from .constants import images_dir, summon_config as config
@@ -15,6 +16,7 @@ summon_mapping = {
     # fire
     'athena': join(summon_dir, 'athena.png'),
     'colossus omega': join(summon_dir, 'colossus_omega.png'),
+    'colossus omega 4s': join(summon_dir, 'colossus_omega_4s.png'),
     'shiva': join(summon_dir, 'shiva.png'),
     # water
     'leviathan omega': join(summon_dir, 'leviathan_omega.png'),
@@ -71,7 +73,7 @@ class SummonSelector:
         pyautogui.scroll(60)
         return None
 
-    def activate(self):
+    def activate(self, bot_detect=False):
         # wait before summon page is ready
         count = 0
         while True:
@@ -86,6 +88,14 @@ class SummonSelector:
                 break
             count += 1
         time.sleep(random.random() * 0.25)
+
+        if bot_detect:
+            confirm_img = join(images_dir, 'auth_confirm.png')
+            confirm_dialog = utility.locate(confirm_img, 1/3, 0, 2/3, 1)
+            if confirm_dialog is not None:
+                for _ in range(10):
+                    self.logger.info('>>>> CLICK IT NOW <<<<')
+                sys.exit(0)
 
         # find summon
         start = time.time()
@@ -113,7 +123,7 @@ class SummonSelector:
         while True:
             time.sleep(0.5)
             dialog = utility.locate(SummonSelector.dialog_ok.path,
-                                    1/2, 2/3, 1/2, 1/3)
+                                    1/3, 2/3, 2/3, 1/3)
             if dialog is not None:
                 self.logger.info('dialog popped up')
                 break
