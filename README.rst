@@ -9,18 +9,18 @@ For acdemic research use.  Use it at your own risk.
 
 Development Environment
 =======================
-* Python 3.6.3
-* PyAutoGUI 0.9.36
+* Python 3.7.0
+* PyAutoGUI 0.9.38
 * OpenCV 3.3.0
-* NumPy 1.13.3
-* macOS Sierra 10.12.1
+* NumPy 1.15.4
+* macOS Sierra 10.12.6
 
 Mac users have to install ``pyobjc-core`` and ``pyobjc`` additionally.
 
 Environment
 ===========
 * Screen resolution: 1080p (1920 x 1080)
-* Granblue fantasy: chromeApps version
+* Granblue fantasy: AndApp version
 * Application position: alignment top-right
 * Application size: middle (choose 2 diamond in the bottom)
 
@@ -42,6 +42,7 @@ These are currently supported summon list:
 * baal
 * bahamut
 * celeste omega
+* celeste omega 4(★)
 * dark angel olivia
 * europa
 * godsworn alexiel
@@ -78,6 +79,6 @@ Poker Bot
   
 Guild Wars EXTREME+
 -------------------
-* First, enter guild wars page, and select chromeApps windows immediately
+* First, enter guild wars page, and select AndApp windows immediately
   after select guild wars ex+.
 * You can create your battle behaviors in ``guild_wars.ini`` manually.

@@ -5,6 +5,18 @@ I follow Semantic Versioning 2.0.0 to develop this package.
 
 http://semver.org
 
+1.0.0 (2018-12-30)
+------------------
+Adjust parameters to fit AndApp version
+
+* Right now only guild wars part
+
+**Features**
+
+* Add play again feature
+* Add anti guild wars bot detect feature
+* Summons could be used in guild wars script
+
 0.8.3 (2018-02-11)
 ------------------
 **Improvements**
