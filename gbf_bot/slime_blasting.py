@@ -13,7 +13,7 @@ skill = Button('skill.png', config['skill'])
 back = Button('back.png', config['back'])
 
 
-def activate():
+def activate(count):
     logger.info('slime blasting start')
     pyautogui.PAUSE = 1.2
     # click twice for window choice
