@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 result_ok = Button('ok1.png', config['result ok'])
 to_next = Button('to_quest.png', config['to next'])
-if config['guild wars'] == 'yes':
+if config['has again'] == 'yes':
     to_next = Button('again.png', config['again'])
 friend_cancel = Button('cancel.png', config['friend cancel'])
 
