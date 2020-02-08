@@ -1,9 +1,30 @@
 Changelog
 =========
 
-I follow Semantic Versioning 2.0.0 to develop this package.
+This project follows Semantic Versioning 2.0.0
 
 http://semver.org
+
+This project follows keepachangelog to write CHANGELOG.
+
+https://keepachangelog.com/en/1.0.0/
+
+
+CHANGELOG
+
+2.0.0 (2020-02-08)
+------------------
+
+**Added**
+
+* Add new summons.
+* Add `has again` in favorites mission.
+
+**Changed**
+
+* Adjust favorites parameters to fit AndApp version.
+* Adjust poker parameters to fit AndApp version.
+* Adjust slime blasting parameters to fit AndApp version.
 
 1.0.0 (2018-12-30)
 ------------------

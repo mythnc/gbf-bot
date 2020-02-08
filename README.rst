@@ -54,6 +54,8 @@ These are currently supported summon list:
 * odin
 * tezcatlipoca
 * white rabbit
+* varuna
+* huanglong
 
 Usage
 =====
