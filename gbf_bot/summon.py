@@ -22,6 +22,7 @@ summon_mapping = {
     'leviathan omega': join(summon_dir, 'leviathan_omega.png'),
     'europa': join(summon_dir, 'europa.png'),
     'macula marius': join(summon_dir, 'macula_marius.png'),
+    'varuna': join(summon_dir, 'varuna.png'),
     # earth
     'baal': join(summon_dir, 'baal.png'),
     'medusa': join(summon_dir, 'medusa.png'),
@@ -38,6 +39,8 @@ summon_mapping = {
     # drop rates
     'kaguya': join(summon_dir, 'kaguya.png'),
     'white rabbit': join(summon_dir, 'white_rabbit.png'),
+    # special
+    'huanglong': join(summon_dir, 'huanglong.png'),
 }
 
 
@@ -91,7 +94,7 @@ class SummonSelector:
 
         if bot_detect:
             confirm_img = join(images_dir, 'auth_confirm.png')
-            confirm_dialog = utility.locate(confirm_img, 1/3, 0, 2/3, 1)
+            confirm_dialog = utility.locate(confirm_img, 0, 0, 1, 1)
             if confirm_dialog is not None:
                 for _ in range(10):
                     self.logger.info('>>>> CLICK IT NOW <<<<')

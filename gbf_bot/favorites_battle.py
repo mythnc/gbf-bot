@@ -23,20 +23,22 @@ class FavoritesBattle():
         self.cell.double_click()
         time.sleep(random.random() * 0.25)
 
-    def activate(self):
+    def activate(self, count):
         pyautogui.PAUSE = 1.5
 
-        # wait before enter favorites menu
-        self.logger.debug('wait before enter favorites menu')
-        while True:
-            time.sleep(0.5)
-            found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,
-                                   confidence=0.75)
-            if found is not None:
-                break
+        if count == 1:
 
-        self.logger.info('click mission')
-        self.click_cell()
+            # wait before enter favorites menu
+            self.logger.debug('wait before enter favorites menu')
+            while True:
+                time.sleep(0.5)
+                found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,
+                                       confidence=0.75)
+                if found is not None:
+                    break
+
+            self.logger.info('click mission')
+            self.click_cell()
 
         # AP will be checked before before next step
         # make sure AP is enough

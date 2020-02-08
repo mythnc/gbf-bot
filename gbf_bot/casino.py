@@ -113,7 +113,7 @@ class PokerBot:
         poker.new_cards(cards)
         poker.calculate()
 
-    def activate(self):
+    def activate(self, count):
         pyautogui.PAUSE = 1
 
         self.logger.info('poker bot start')
@@ -192,8 +192,10 @@ class DoubleUpBot:
 
     @staticmethod
     def detect_card(is_final_round=False):
-        x_move_ratio = 1/2 if is_final_round else 0
-        base_image = utility.screenshot(x_move_ratio, 1/4, 1, 1/4)
+        base_image = utility.screenshot(0, 1/4, 1, 1/4)
+        if is_final_round:
+            base_image = utility.screenshot(3/7, 1/4, 2/7, 1/4)
+
         for card_name in DoubleUpBot.cards_name:
             confidence = 0.95
             if card_name[1] in ('J', 'Q', 'K'):
@@ -280,9 +282,9 @@ class DoubleUp:
         number = card_match.index(string)
         self.numbers.remove(number)
         high = self.high_prob(number)
-        self.logger.info('high: ' + str(high))
+        self.logger.info('high: ' + str(float(high)))
         low = self.low_prob(number)
-        self.logger.info('low: ' + str(low))
+        self.logger.info('low: ' + str(float(low)))
         if high >= low:
             self.logger.info('press high')
             return 'high'

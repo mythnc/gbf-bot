@@ -38,7 +38,7 @@ skills_map = [
 ]
 
 battle_summon_list = Button('battle_summon_list.png', config['battle summon list'])
-battle_summon1 = None
+battle_summon1 = Button('battle_summon_list.png', config['battle summon 1'])
 battle_summon2 = None
 battle_summon3 = None
 battle_summon4 = None
@@ -63,6 +63,8 @@ summon = SummonSelector(config['summon name'])
 
 script = configparser.ConfigParser()
 script.read(join(package_root, 'guild_wars.ini'))
+
+auto = Button('auto.png', config['auto'])
 
 
 def wait_battle_start(sleep_time=0.5):
@@ -92,10 +94,10 @@ def cast(stage):
             back.click()
         time.sleep(random.random() * 0.2)
     attack.click()
-    ratio = 2.4
+    #ratio = 2.4
     # TODO: attention to this 2.4 or 2.5 is good
     # If lag, set ration to 3
-    time.sleep(skill_count * ratio + random.random() * 0.5)
+    #time.sleep(skill_count * ratio + random.random() * 0.5)
 
 
 def use_character(character, behavior):
@@ -157,13 +159,25 @@ def activate(count):
     wait_battle_start()
     # battle start
     # round by round
-    for times in range(1, 30):
+    for times in range(1, 6):
         round_ = 'round ' + str(times)
         logger.info('\n' + round_)
         cast(round_)
-        logger.info('reload and wait')
+
+        # click auto
+        if times == 1:
+            #logger.info('click auto')
+            #auto.click(partition=12)
+            time.sleep(20 + random.random() * 0.2)
+        elif times == 2:
+            logger.info('wait 10 sec')
+            time.sleep(15)
+        else:
+            time.sleep(2)
+
         reload_.click()
-        time.sleep(3.5)
+        #time.sleep(3)
+        time.sleep(4)
 
         if is_finished():
             break

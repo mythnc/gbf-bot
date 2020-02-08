@@ -26,9 +26,9 @@ def activate(battle_time):
     pyautogui.PAUSE = 1.3
     logger.info('click attack')
     attack.double_click()
-    time.sleep(random.random() * 0.35)
+    time.sleep(1 + random.random() * 0.35)
     logger.info('click auto')
-    auto.click()
+    auto.click(partition=12)
 
     # battle result
     time.sleep(battle_time)
