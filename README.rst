@@ -9,13 +9,9 @@ For acdemic research use.  Use it at your own risk.
 
 Development Environment
 =======================
-* Python 3.7.0
-* PyAutoGUI 0.9.38
-* OpenCV 3.3.0
-* NumPy 1.15.4
-* macOS Sierra 10.12.6
-
-Mac users have to install ``pyobjc-core`` and ``pyobjc`` additionally.
+* Python 3.9.0
+* macOS Catalina 10.15.7
+* Pipenv (version 2020.11.15)
 
 Environment
 ===========
