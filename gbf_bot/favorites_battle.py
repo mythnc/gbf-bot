@@ -8,16 +8,13 @@ from .summon import SummonSelector
 from .components import Button
 
 
-class FavoritesBattle():
+class FavoritesBattle:
     def __init__(self):
-        self.favorites = Button('favorites.png', config['favorites'])
-        self.cell = Button('favorites_cell.png',
-                           config['cell'],
-                           False)
-        self.battle_time = config['battle time']
-        self.logger = logging.getLogger(__name__ + '.'
-                                        + FavoritesBattle.__name__)
-        self.summon = SummonSelector(config['summon name'])
+        self.favorites = Button("favorites.png", config["favorites"])
+        self.cell = Button("favorites_cell.png", config["cell"], False)
+        self.battle_time = config["battle time"]
+        self.logger = logging.getLogger(__name__ + "." + FavoritesBattle.__name__)
+        self.summon = SummonSelector(config["summon name"])
 
     def click_cell(self):
         self.cell.double_click()
@@ -29,15 +26,14 @@ class FavoritesBattle():
         if count == 1:
 
             # wait before enter favorites menu
-            self.logger.debug('wait before enter favorites menu')
+            self.logger.debug("wait before enter favorites menu")
             while True:
                 time.sleep(0.5)
-                found = utility.locate(self.favorites.path, 0, 1/3, 1, 1/7,
-                                       confidence=0.75)
+                found = utility.locate(self.favorites.path, 0, 1 / 3, 1, 1 / 7, confidence=0.75)
                 if found is not None:
                     break
 
-            self.logger.info('click mission')
+            self.logger.info("click mission")
             self.click_cell()
 
         # AP will be checked before before next step

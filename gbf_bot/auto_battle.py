@@ -9,8 +9,8 @@ from .components import Button
 logger = logging.getLogger(__name__)
 
 
-attack = Button('attack.png', config['attack'])
-auto = Button('auto.png', config['auto'])
+attack = Button("attack.png", config["attack"])
+auto = Button("auto.png", config["auto"])
 
 
 def activate(battle_time):
@@ -19,15 +19,15 @@ def activate(battle_time):
     # wait before battle start
     while True:
         time.sleep(0.5)
-        found = utility.locate(attack.path, 1/2, 1/3, 1/2, 2/3)
+        found = utility.locate(attack.path, 1 / 2, 1 / 3, 1 / 2, 2 / 3)
         if found is not None:
             break
 
     pyautogui.PAUSE = 1.3
-    logger.info('click attack')
+    logger.info("click attack")
     attack.double_click()
     time.sleep(1 + random.random() * 0.35)
-    logger.info('click auto')
+    logger.info("click auto")
     auto.click(partition=12)
 
     # battle result
