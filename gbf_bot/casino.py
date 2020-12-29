@@ -5,10 +5,12 @@ from os.path import join
 import random
 import sys
 import time
+
 import pyautogui
+
 from .constants import images_dir, poker_config as config
-from . import utility
-from .components import Button
+from .components import Button, AppWindow, Mouse
+
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +51,10 @@ class PokerBot:
 
     @staticmethod
     def detect_cards():
-        base_image = utility.screenshot(0, 1 / 3, 1, 1 / 6)
+        base_image = AppWindow.screenshot((0, 1 / 3, 1, 1 / 6))
         cards = [None] * 5
         for card_name in PokerBot.cards_name:
-            confidence = 0.97
-            found = pyautogui.locate(join(poker_dir, card_name), base_image, confidence=confidence)
+            found = pyautogui.locate(join(poker_dir, card_name), base_image, confidence=0.97)
             if found:
                 PokerBot.logger.debug(card_name)
                 i = (found[0] - 41) // 77
@@ -69,12 +70,12 @@ class PokerBot:
 
     def click(self, card_index, duration=0.15):
         center_point = self.cards[card_index]
-        return utility.click(center_point, self.card_size, duration)
+        return Mouse.click(center_point, self.card_size, duration)
 
     @staticmethod
     def is_double_up():
         while True:
-            base_image = utility.screenshot(0, 1 / 4, 1, 1 / 12)
+            base_image = AppWindow.screenshot((0, 1 / 4, 1, 1 / 12))
             result = pyautogui.locate(join(poker_dir, "to_double_up.png"), base_image, confidence=0.9)
             if result is not None:
                 return True
@@ -93,7 +94,7 @@ class PokerBot:
             self.start.click()
             self.mouse_position = self.start
         else:
-            utility.click()
+            Mouse.click_again()
 
     @staticmethod
     def check_result(poker):
@@ -101,15 +102,12 @@ class PokerBot:
             return
 
         pyautogui.PAUSE = 0.2
-        try:
-            cards = PokerBot.detect_cards()
-        except NoneInCardsException:
-            raise NoneInCardsException()
+        cards = PokerBot.detect_cards()
         pyautogui.PAUSE = 1
         poker.new_cards(cards)
         poker.calculate()
 
-    def activate(self, count):
+    def activate(self):
         pyautogui.PAUSE = 1
 
         self.logger.info("poker bot start")
@@ -137,7 +135,7 @@ class PokerBot:
                 if hold_cards_index:
                     self.ok.click()
                 else:
-                    utility.click()
+                    Mouse.click_again()
                 time.sleep(2.5 + 0.2 * random.random())
 
                 if PokerBot.is_double_up():
@@ -155,7 +153,7 @@ class PokerBot:
             pass
         except pyautogui.FailSafeException:
             pass
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             self.logger.error(e)
         finally:
             self.do_statistics(start_time)
@@ -188,9 +186,9 @@ class DoubleUpBot:
 
     @staticmethod
     def detect_card(is_final_round=False):
-        base_image = utility.screenshot(0, 1 / 4, 1, 1 / 4)
+        base_image = AppWindow.screenshot((0, 1 / 4, 1, 1 / 4))
         if is_final_round:
-            base_image = utility.screenshot(3 / 7, 1 / 4, 2 / 7, 1 / 4)
+            base_image = AppWindow.screenshot((3 / 7, 1 / 4, 2 / 7, 1 / 4))
 
         for card_name in DoubleUpBot.cards_name:
             confidence = 0.95
@@ -208,7 +206,7 @@ class DoubleUpBot:
 
     def is_continue(self):
         while True:
-            base_image = utility.screenshot(0, 1 / 5, 1, 1 / 12)
+            base_image = AppWindow.screenshot((0, 1 / 5, 1, 1 / 12))
             result = pyautogui.locate(join(doubleup_dir, "continue.png"), base_image, confidence=0.9)
             if result is not None:
                 return True
@@ -231,7 +229,7 @@ class DoubleUpBot:
         time.sleep(3)
         doubleup = DoubleUp()
         for round_ in range(1, 11):
-            self.logger.info("\nround " + str(round_))
+            self.logger.info(f"\nround {round_}")
             self.card = DoubleUpBot.detect_card()
             if round_ > 1 and self.previous_number != self.card[1]:
                 self.chip *= 2
@@ -240,18 +238,18 @@ class DoubleUpBot:
 
             result_map = {"high": self.high, "low": self.low}
             if self.mouse_position == result_map[result]:
-                utility.click()
+                Mouse.click_again()
             else:
                 result_map[result].click()
                 self.mouse_position = result_map[result]
             time.sleep(2 + 0.1 * random.random())
 
             if not self.is_continue():
-                self.logger.info("earned chips: " + str(self.chip))
+                self.logger.info(f"earned chips: {self.chip}")
                 return self.chip
 
             if self.mouse_position == self.yes:
-                utility.click()
+                Mouse.click_again()
             else:
                 self.yes.click()
                 self.mouse_position = self.yes
@@ -274,15 +272,16 @@ class DoubleUp:
         number = card_match.index(string)
         self.numbers.remove(number)
         high = self.high_prob(number)
-        self.logger.info("high: " + str(float(high)))
+        self.logger.info(f"high: {float(high)}")
         low = self.low_prob(number)
-        self.logger.info("low: " + str(float(low)))
+        self.logger.info(f"low: {float(low)}")
         if high >= low:
             self.logger.info("press high")
-            return "high"
+            result = "high"
         elif high < low:
             self.logger.info("press low")
-            return "low"
+            result = "low"
+        return result
 
 
 class Poker:
@@ -388,7 +387,7 @@ class Poker:
             self.poker_hands = "flush"
             self.hold_cards_index = list(range(5))
         # straight
-        elif self.is_straight() or (len(set(self.numbers)) == 4 and (interval == 3 or interval == 4)):
+        elif self.is_straight() or (len(set(self.numbers)) == 4 and (interval in [3, 4])):
             self.poker_hands = "straight"
             self.hold_cards_index = list(range(5))
         # 3 kind
@@ -452,7 +451,7 @@ class Poker:
         if interval == 4:
             return True
 
-        if 14 == self.numbers[-1]:
+        if self.numbers[-1] == 14:
             temp = list(self.numbers)
             self.numbers[-1] = 1
             self.numbers.sort()

@@ -5,8 +5,8 @@ import sys
 import time
 import pyautogui
 from .constants import images_dir, battle_result_config as config
-from . import utility
-from .components import Button
+from .components import Button, AppWindow
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def activate():
     logger.debug("wait before battle end")
     while True:
         time.sleep(0.5)
-        found = utility.locate(result_ok.path, 0, 1 / 2, 1, 1 / 4)
+        found = AppWindow.locate_on(result_ok.path, (0, 1 / 2, 1, 1 / 4))
         if found is not None:
             break
 
@@ -43,7 +43,7 @@ def activate():
         if count % 10 == 0:
             pyautogui.click()
         time.sleep(0.5)
-        found = utility.locate(to_next.path, 0, 2 / 5, 1, 1 / 5)
+        found = AppWindow.locate_on(to_next.path, (0, 2 / 5, 1, 1 / 5))
         if found is not None:
             break
         count += 1
@@ -53,7 +53,7 @@ def activate():
     time.sleep(0.8)
 
     # friend request cancel if any
-    found = utility.locate(friend_cancel.path, 0, 3 / 5, 1, 1 / 9)
+    found = AppWindow.locate_on(friend_cancel.path, (0, 3 / 5, 1, 1 / 9))
     if found is not None:
         logger.info("click friend request cancel")
         friend_cancel.click()
@@ -70,7 +70,7 @@ def chips_dialog():
 
     chips_ok = Button("ok1.png", config["chips ok"])
     medal = join(images_dir, "medal.png")
-    found = utility.locate(medal, 0, 2 / 5, 1 / 2, 1 / 5)
+    found = AppWindow.locate_on(medal, (0, 2 / 5, 1 / 2, 1 / 5))
     if found is not None:
         logger.info("chip dialog found")
         chips_ok.click()
@@ -83,7 +83,7 @@ def halo_dialog():
         return
 
     dimension_close = Button("close.png", config["dimension close"])
-    found = utility.locate(dimension_close.path, 0, 2 / 3, 1, 1 / 7)
+    found = AppWindow.locate_on(dimension_close.path, (0, 2 / 3, 1, 1 / 7))
     if found is not None:
         logger.info("dimension dialog found")
         logger.info("gbf robt finished")
@@ -102,7 +102,7 @@ def guild_wars_dialog():
             to_next.click()
 
         time.sleep(0.5)
-        found = utility.locate(ok.path, 0, 2 / 3, 1, 1 / 6)
+        found = AppWindow.locate_on(ok.path, (0, 2 / 3, 1, 1 / 6))
         if found is not None:
             logger.info("guild wars result dialog found")
             ok.click()

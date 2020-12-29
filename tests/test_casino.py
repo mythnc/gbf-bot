@@ -38,7 +38,7 @@ class TestPoker:
         poker.calculate()
         assert poker.hold_cards_index == list(range(5))
         # flush
-        poker.new_game(["S2", "H2", "S3", "H3", "C3"])
+        poker.new_game(["S6", "S2", "S8", "S4", "S5"])
         poker.calculate()
         assert poker.hold_cards_index == list(range(5))
         poker.new_game(["S6", "S2", "JOKER", "S4", "S5"])
@@ -49,6 +49,9 @@ class TestPoker:
         poker.calculate()
         assert poker.hold_cards_index == list(range(5))
         poker.new_game(["D3", "H2", "JOKER", "S3", "D2"])
+        poker.calculate()
+        assert poker.hold_cards_index == list(range(5))
+        poker.new_game(["S2", "H2", "S2", "H3", "C3"])
         poker.calculate()
         assert poker.hold_cards_index == list(range(5))
         # 4 kind

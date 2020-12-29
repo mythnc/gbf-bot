@@ -1,9 +1,12 @@
 import logging
 import random
 import time
+
 import pyautogui
+
 from .constants import slime_blasting_config as config
-from .components import Button
+from .components import Button, Mouse
+
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +16,7 @@ skill = Button("skill.png", config["skill"])
 back = Button("back.png", config["back"])
 
 
-def activate(count):
+def activate():
     logger.info("slime blasting start")
     pyautogui.PAUSE = 1.2
     # click twice for window choice
@@ -31,11 +34,11 @@ def activate(count):
     skill.click()
     time.sleep(random.random() * 0.25)
     logger.info("click back")
-    back_point = back.click()
+    back.click()
     time.sleep(1 + random.random() * 0.25)
 
     # battle result
-    logger.info("click back")
-    back.click(0, back_point)
+    logger.info("click back again")
+    Mouse.click_again()
     time.sleep(random.random() * 0.25)
     logger.info("slime blasting end")

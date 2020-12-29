@@ -3,11 +3,13 @@ import logging
 from os.path import join
 import random
 import time
+
 import pyautogui
-from .constants import package_root, images_dir, guild_wars_config as config
-from . import utility, battle_result
+
+from .constants import package_root, guild_wars_config as config
+from . import battle_result
 from .summon import SummonSelector
-from .components import Button
+from .components import Button, AppWindow
 
 
 logger = logging.getLogger(__name__)
@@ -70,12 +72,13 @@ auto = Button("auto.png", config["auto"])
 def wait_battle_start(sleep_time=0.5):
     while True:
         time.sleep(sleep_time)
-        found = utility.locate(attack.path, 1 / 2, 1 / 3, 1 / 2, 2 / 3)
+        found = AppWindow.locate_on(attack.path, (1 / 2, 1 / 3, 1 / 2, 2 / 3))
         if found is not None:
             return
 
 
 def cast(stage):
+    logger.info(stage)
     try:
         commands = script[stage]
     except KeyError:
@@ -86,7 +89,7 @@ def cast(stage):
     for i, command in enumerate(commands):
         if "character" in command:
             skill_count += use_character(command, commands[command])
-        elif "summon" == command:
+        elif command == "summon":
             use_summon(int(commands[command]))
             skill_count += 1
 
@@ -118,80 +121,68 @@ def use_summon(number):
     time.sleep(random.random() * 0.2)
 
 
-def is_over_drive():
-    if not script["over drive"]:
-        return
-
-    found = utility.locate(join(images_dir, "over_drive.png"), 1 / 2, 0, 1 / 2, 1 / 5, confidence=0.85)
-    if found is None:
-        return False
-    return True
-
-
-# TODO: method could merge with previous one
 def is_finished():
-    found = utility.locate(ok.path, 0, 1 / 2, 1, 1 / 4)
-    # im = utility.screenshot(0, 1/2, 1, 1/4)
-    # im.save('test.png')
+    found = AppWindow.locate_on(ok.path, (0, 1 / 2, 1, 1 / 4))
     if found is not None:
         return True
     return False
 
 
-def activate(count):
+# XXX: need to rewrite becuase EXTREME+ mechanism changed
+def activate():
     pyautogui.PAUSE = 1.5
 
-    # chose enemy
-    if count == 1:
-        time.sleep(1)
-        pyautogui.click(1671, 232)
-        pyautogui.scroll(-10)
-        logger.info("click cell")
-        cell.click(partition=8)
-        time.sleep(0.75)
-        logger.info("click ex+")
-        ex_plus.click(partition=10)
+    count = 1
+    while True:
+        logger.info(f"execution times: {count}")
 
-    # chose summon
-    summon.activate(True)
+        if count == 1:
+            chose_enemy()
 
-    wait_battle_start()
-    # battle start
-    # round by round
-    for times in range(1, 6):
-        round_ = "round " + str(times)
-        logger.info("\n" + round_)
-        cast(round_)
+        # chose summon
+        summon.activate(True)
 
-        # click auto
-        if times == 1:
-            # logger.info('click auto')
-            # auto.click(partition=12)
-            time.sleep(20 + random.random() * 0.2)
-        elif times == 2:
-            logger.info("wait 10 sec")
-            time.sleep(15)
-        else:
-            time.sleep(2)
+        wait_battle_start()
+        # battle start
+        # round by round
+        for times in range(1, 6):
+            cast(f"round {times}")
 
-        reload_.click()
-        # time.sleep(3)
-        time.sleep(4)
+            # click auto
+            if times == 1:
+                # logger.info('click auto')
+                # auto.click(partition=12)
+                time.sleep(20 + random.random() * 0.2)
+            elif times == 2:
+                logger.info("wait 10 sec")
+                time.sleep(15)
+            else:
+                time.sleep(2)
 
-        if is_finished():
-            break
-
-        if times == 1 and config["assault time"] == "yes":
-            time.sleep(15)
-
-        if is_over_drive():
-            logger.info("cast over drive")
-            cast("over drive")
-            logger.info("reload and wait")
             reload_.click()
-            time.sleep(3.5)
+            # time.sleep(3)
+            time.sleep(4)
 
-        if is_finished():
-            break
+            if is_finished():
+                break
 
-    battle_result.activate()
+            if times == 1 and config["assault time"] == "yes":
+                time.sleep(15)
+
+            if is_finished():
+                break
+
+        battle_result.activate()
+
+        count += 1
+
+
+def chose_enemy():
+    time.sleep(1)
+    pyautogui.click(1671, 232)
+    pyautogui.scroll(-10)
+    logger.info("click cell")
+    cell.click(partition=8)
+    time.sleep(0.75)
+    logger.info("click ex+")
+    ex_plus.click(partition=10)
