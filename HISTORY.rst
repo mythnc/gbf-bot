@@ -12,6 +12,13 @@ https://keepachangelog.com/en/1.0.0/
 
 CHANGELOG
 
+3.1.0 (2020-12-29)
+------------------
+
+**Improvements**
+
+* Code Quality
+
 3.0.0 (2020-12-18)
 ------------------
 
