@@ -7,6 +7,17 @@ That's how this robot being born.
 
 For acdemic research use.  Use it at your own risk.
 
+Notice
+======
+
+I write this project for myself.
+
+I don't have time to teach you how to use it freely.
+
+If you really want me to answer your non-technical questions, please buy me coffees first :)
+
+https://www.buymeacoffee.com/mythnc
+
 Development Environment
 =======================
 * Python 3.9.0
